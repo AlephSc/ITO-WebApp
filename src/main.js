@@ -241,6 +241,7 @@ if (!reduced) {
   const pad2 = (n) => String(n).padStart(2, "0");
   const stNames = ["bab 01 / pola", "bab 02 / data", "bab 03 / karya", "bab 04 / ito 27"];
   const stTl = gsap.timeline({
+    onUpdate: () => sfc.classList.toggle("flip", +gsap.getProperty(sfc, "x") > StL.W * .96 - 115),
     scrollTrigger: {
       trigger: "#story", start: "top top", end: "+=900%", pin: true, scrub: 1,
       invalidateOnRefresh: true, onRefreshInit: stMeasure,
@@ -437,6 +438,7 @@ if (!reduced) {
         const p = self.progress, f = Math.round(p * 4 * 25);
         tc.dataset.txt = `00:0${sIdx + 1}:${pad2(Math.floor(f / 25))}:${pad2(f % 25)}`;
         phw.style.setProperty("--p", p);
+        fc.classList.toggle("flip", +gsap.getProperty(fc, "x") > SL.W * .96 - 115);
         if (statNums.length) {
           const cp = Math.max(0, Math.min(1, (p - .12) / .50));
           const ease = 1 - Math.pow(1 - cp, 3);
