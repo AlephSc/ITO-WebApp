@@ -88,8 +88,10 @@ const bindCursor = (el) => {
   };
 };
 
-/* hero build: seluruh bagian hero dibangun CEPAT & BERBARENGAN oleh 3 KURSOR SEKALIGUS (panitia ITO, desainer UI, dev 3D) */
+/* hero build: seluruh bagian hero dibangun CEPAT & BERBARENGAN oleh 2 kursor kolaborator (panitia ITO & desainer UI) */
 const drop = { v: 1 }; /* dibaca loop 3D: 0 = gunungan di atas layar, 1 = mendarat */
+let scrollN = 0, in3D = true;
+document.addEventListener("visibilitychange", () => { in3D = !document.hidden; });
 if (!reduced) {
   document.documentElement.classList.add("build");
   const H = document.getElementById("hero"), $ = (s) => H.querySelector(s), $$ = (s) => [...H.querySelectorAll(s)];
@@ -294,7 +296,7 @@ if (!reduced) {
       trigger: "#story", start: "top top", end: "+=920%", pin: true, scrub: .8,
       invalidateOnRefresh: true, onRefreshInit: stMeasure,
       onUpdate: (self) => {
-        scrollState.story = self.progress;
+        scrollN = self.progress;
         const f = Math.round(self.progress * 16 * 25);
         stc.dataset.txt = `00:04:${pad2(Math.floor(f / 25))}:${pad2(f % 25)}`;
         sphw.style.setProperty("--p", self.progress);
@@ -537,10 +539,7 @@ if (!reduced) {
   });
 }
 
-/* 3D gunungan */
-let scrollN = 0, in3D = true;
-/* satu pemicu visibility: render mati saat hero & story keduanya keluar viewport (dulu dua listener dobel) */
-ScrollTrigger.create({ trigger: "main", start: "top bottom", end: "#timeline top", onToggle: (s) => { in3D = s.isActive; } });
+/* 3D gunungan: aktif sepanjang halaman selama tab terlihat */
 async function boot3D() {
 const canvas = document.getElementById("bg3d");
 const THREE = await import("three").catch((e) => { console.warn("three failed", e); return null; });
@@ -652,7 +651,7 @@ gsap.ticker.add(() => {
   mesh.instanceColor.needsUpdate = true;
   /* auto-rotate + drag dengan inersia + tilt pointer */
   if (!dragging) { dragRot += vel; vel *= 0.94; }
-  mesh.rotation.y = t * 0.12 + dragRot + mx * 0.5 + scrollN * 1.6;
+  mesh.rotation.y = t * 0.14 + dragRot + mx * 0.5 + scrollN * 1.6 + window.scrollY * 0.0004;
   mesh.rotation.x = my * 0.15;
   mesh.position.y = Math.sin(t * 0.5) * 0.2 + 0.6 + (1 - drop.v) * 11;
   renderer.render(scene, camera);
