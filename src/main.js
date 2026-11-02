@@ -460,23 +460,23 @@ if (!reduced) {
     }
 
     stl.to(items,
-      { y: 0, scale: 1, autoAlpha: 1, duration: .60, stagger: .05 },
-      .16)
+      { y: 0, scale: 1, autoAlpha: 1, duration: .56, stagger: { amount: .16 } },
+      .14)
       .to(clips,
-        { clipPath: "inset(0 0% 0 0)", duration: .62, stagger: .05 },
-        .18);
+        { clipPath: "inset(0 0% 0 0)", duration: .56, stagger: { amount: .16 } },
+        .16);
 
     if (cardMarqs.length) {
-      stl.fromTo(cardMarqs, { autoAlpha: 1, scale: .96 }, { autoAlpha: 0, scale: 1, duration: .62, stagger: .06, immediateRender: false }, .22);
+      stl.fromTo(cardMarqs, { autoAlpha: 1, scale: .96 }, { autoAlpha: 0, scale: 1, duration: .54, stagger: { amount: .14 }, immediateRender: false }, .18);
     }
 
-    cs[0].setTool(stl, cfg.cursors[0][3], .70);
-    stl.to([gx, gy], { autoAlpha: 1, duration: .12 }, .72)
-      .to([gx, gy, marq], { autoAlpha: 0, duration: .14 }, .84);
-    cs[0].click(stl, .76);
+    cs[0].setTool(stl, cfg.cursors[0][3], .72);
+    stl.to([gx, gy], { autoAlpha: 1, duration: .12 }, .74)
+      .to([gx, gy, marq], { autoAlpha: 0, duration: .12 }, .86);
+    cs[0].click(stl, .78);
 
-    /* Selesai di-build PAS DI TENGAH LAYAR (end: "center 52%"): seluruh kursor & chrome editor memudar tepat saat section mencapai tengah layar */
-    stl.to([...cs.map((c) => c.el), hud, strip, ...crops, $(".frame")], { autoAlpha: 0, duration: .14 }, .86);
+    /* Selesai di-build PAS DI TENGAH LAYAR (end: "center 52%", t=0.88..1.00): seluruh kursor & chrome editor memudar tepat saat section mencapai tengah layar */
+    stl.to([...cs.map((c) => c.el), hud, strip, ...crops, $(".frame")], { autoAlpha: 0, duration: .12 }, .88);
 
     ScrollTrigger.create({
       trigger: sec, start: cfg.start, end: cfg.end, scrub: .3, animation: stl,
