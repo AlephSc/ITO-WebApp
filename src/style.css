@@ -168,8 +168,8 @@ em{font-style:normal;color:var(--violet)}
 .scene h2{font-size:clamp(2.2rem,6vw,4.2rem)}
 /* tiap scene absolut satu viewport, bergantian di tempat (mobile & desktop) */
 .story-pin .story{position:relative;height:100dvh}
-.story-pin .scene{position:absolute;inset:0;min-height:0}
-.story-pin .scene:not(.s1){opacity:0;visibility:hidden}
+.story-pin .story>.scene{position:absolute;inset:0;min-height:0;padding-top:4.8rem}
+.story-pin .story>.scene:not(.s1){opacity:0;visibility:hidden}
 
 /* timeline */
 .tl-list{list-style:none;padding:0;margin-top:2rem}
@@ -216,6 +216,17 @@ em{font-style:normal;color:var(--violet)}
 .sec-build:not(.hero) .c4{right:calc(3% - 18px);bottom:calc(12% - 18px)}
 .sec-build:not(.hero) .gx{top:10%;bottom:12%}
 .sec-build:not(.hero) .gy{left:3%;right:3%}
+/* #story pinned 100dvh berada di bawah navbar fixed 4.25rem — samakan frame/hud dengan hero agar tidak tertutup navbar */
+.story.sec-build .frame{top:16%;bottom:10%;left:4%;right:4%}
+.story.sec-build .hud{top:5rem;left:4%}
+.story.sec-build .strip{bottom:1.25rem;left:4%;right:4%}
+.story.sec-build .c1{left:calc(4% - 22px);top:calc(16% - 22px)}
+.story.sec-build .c2{right:calc(4% - 22px);top:calc(16% - 22px)}
+.story.sec-build .c3{left:calc(4% - 22px);bottom:calc(10% - 22px)}
+.story.sec-build .c4{right:calc(4% - 22px);bottom:calc(10% - 22px)}
+.story.sec-build .gx{top:16%;bottom:10%}
+.story.sec-build .gy{left:4%;right:4%}
+@media (max-width:768px){.story.sec-build .hud{top:4.25rem}}
 .card{position:relative}
 .card-marq{position:absolute;inset:-4px;border:1px dashed var(--punch);border-radius:var(--radius);pointer-events:none}
 [data-txt]::after{content:attr(data-txt)}
