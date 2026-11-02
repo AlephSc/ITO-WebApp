@@ -160,7 +160,7 @@ em{font-style:normal;color:var(--violet)}
 /* lomba */
 .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:2.2rem}
 .section-note{color:var(--muted);font-size:.9rem}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:1rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:1rem}
 .card{min-width:0}
 .card{border:1px solid var(--line-soft);border-radius:var(--radius);padding:1.8rem;background:linear-gradient(180deg,var(--bg2),var(--card-tint));display:flex;flex-direction:column;gap:.6rem;transform:translateZ(0);transition:transform .35s cubic-bezier(.25,.1,.35,1),border-color .35s}
 .card:hover{transform:translateY(-6px);border-color:var(--purple)}
