@@ -56,35 +56,21 @@ const scLinks = [...document.querySelectorAll(".nav-links a")];
   });
 }
 
-/* counter: reserve ruang digit final sejak awal — angka 0 vs 300 beda lebar (CLS culprit #stats) */
+/* counter: cepat & serentak saat section stats dibangun */
 const cio = new IntersectionObserver((es) => es.forEach((e) => {
   if (!e.isIntersecting) return;
   cio.unobserve(e.target);
   const el = e.target, target = +el.dataset.target, t0 = performance.now();
   el.style.minWidth = el.dataset.target.length + "ch";
   (function tick(t) {
-    const p = Math.min((t - t0) / 1300, 1);
+    const p = Math.min((t - t0) / 650, 1);
     el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
     if (p < 1) requestAnimationFrame(tick);
   })(t0);
-}), { threshold: 0.5 });
+}), { threshold: 0.25 });
 document.querySelectorAll(".num").forEach((n) => cio.observe(n));
 
-/* reveals */
-const rio = new IntersectionObserver((es) => es.forEach((e) =>
-  e.target.classList.toggle("in", e.isIntersecting)
-), { threshold: 0.12 });
-document.querySelectorAll(".reveal").forEach((el) => rio.observe(el));
-
-/* cascade cards */
-gsap.utils.toArray(".card").forEach((card, i) => {
-  gsap.from(card, {
-    xPercent: (i % 2 ? 10 : -10) * 1.6, autoAlpha: 0, duration: 1.1, ease: "expo.out",
-    scrollTrigger: { trigger: card, start: "top 88%" }
-  });
-});
-
-/* hero build: halaman disusun dari nol oleh kursor palsu, scroll = playhead (desktop & mobile) */
+/* hero build: seluruh bagian hero dibangun CEPAT & BERBARENGAN saat di-scroll (desktop & mobile) */
 const drop = { v: 1 }; /* dibaca loop 3D: 0 = gunungan di atas layar, 1 = mendarat */
 if (!reduced) {
   document.documentElement.classList.add("build");
@@ -99,21 +85,20 @@ if (!reduced) {
   const measure = () => {
     const W = H.offsetWidth, Hh = H.offsetHeight, t = box(title), c = box(cta), tr = box(tray);
     const pad = W < 600 ? 6 : 12, mx = Math.max(8, t.x - pad), mw = Math.min(W - 16, t.w + pad * 2);
-    /* di mobile .tray disembunyikan → tombol datang dari bawah-tengah hero */
     const ax = tr.w ? tr.cx : W / 2, ay = tr.w ? tr.cy : Hh * .82;
     L = { W, H: Hh, t, m: { x: mx, y: t.y - pad, w: mw, h: t.h + pad * 2 }, c, ax, ay, term: box(term), sub: box(sub) };
     gy.style.top = c.cy + "px";
   };
   measure();
   document.fonts?.ready.then(() => ScrollTrigger.refresh());
-  const fn = (f) => () => f(L); /* nilai dihitung ulang tiap refresh/resize */
+  const fn = (f) => () => f(L);
   const cur = (on) => [[arrow, on === "arrow"], [cross, on === "cross"], [pen, on === "pen"]].map(([el, v]) => ({ el, v }));
   const tl = gsap.timeline({
-    defaults: { ease: "power2.inOut" },
+    defaults: { ease: "power2.out" },
     onUpdate: () => fc.classList.toggle("flip", +gsap.getProperty(fc, "x") > L.W * .96 - 115)
   });
   const tool = (on, at) => { const p = at ?? ">"; cur(on).forEach(({ el, v }) => tl.set(el, { autoAlpha: v ? 1 : 0 }, p)); };
-  const click = (at) => tl.fromTo(ring, { scale: .3, autoAlpha: 1 }, { scale: 1.7, autoAlpha: 0, duration: .35, ease: "power1.out" }, at ?? ">");
+  const click = (at) => tl.fromTo(ring, { scale: .3, autoAlpha: 1 }, { scale: 1.7, autoAlpha: 0, duration: .22, ease: "power1.out" }, at ?? ">");
 
   gsap.set(fc, { x: fn((l) => l.W * .04), y: fn((l) => l.H * .16), autoAlpha: 0 });
   gsap.set([arrow, cross, ring], { autoAlpha: 0 });
@@ -121,79 +106,62 @@ if (!reduced) {
   gsap.set([fr, fl, ...gv], { scaleY: 0 });
   gsap.set([".crop", hud, ".layers", marq, tray, gx, gy, ".hero-meta", ".hero-hint"].map((s) => typeof s === "string" ? H.querySelectorAll(s) : s), { autoAlpha: 0 });
   gsap.set(".crop", { scale: 0 });
-  gsap.set(term, { autoAlpha: 0, scale: .6 });
+  gsap.set(term, { autoAlpha: 0, scale: .75 });
   gsap.set([...lns, sub], { clipPath: "inset(0 100% 0 0)" });
-  gsap.set(cta, { x: fn((l) => l.ax - l.c.cx), y: fn((l) => l.ay - l.c.cy), scale: .85, autoAlpha: 0 });
+  gsap.set(cta, { x: fn((l) => l.ax - l.c.cx), y: fn((l) => l.ay - l.c.cy), scale: .88, autoAlpha: 0 });
   drop.v = 0;
 
-  /* 1 grid: pen tool menggambar 4 sisi bingkai satu-per-satu mengikuti ujung pen (atas → kanan → bawah → kiri), lalu crosshair memasang grid 3×3 */
-  tl.addLabel("grid")
-    .to(".build-hint", { autoAlpha: 0, duration: .3 }, 0)
-    .to([hud, ".strip", fc], { autoAlpha: 1, duration: .25 }, 0)
-    .to(fc, { x: fn((l) => l.W * .96), duration: .45, ease: "none" })
-    .to(ft, { scaleX: 1, duration: .45, ease: "none" }, "<")
-    .to(fc, { y: fn((l) => l.H * .9), duration: .4, ease: "none" })
-    .to(fr, { scaleY: 1, duration: .4, ease: "none" }, "<")
-    .to(fc, { x: fn((l) => l.W * .04), duration: .45, ease: "none" })
-    .to(fbb, { scaleX: 1, duration: .45, ease: "none" }, "<")
-    .to(fc, { y: fn((l) => l.H * .16), duration: .4, ease: "none" })
-    .to(fl, { scaleY: 1, duration: .4, ease: "none" }, "<")
-    .to(H.querySelectorAll(".crop"), { scale: 1, autoAlpha: 1, stagger: .06, duration: .25 });
-  tool("cross");
-  tl.to(fc, { x: fn((l) => l.W / 2), y: fn((l) => l.H * .53), duration: .5 })
-    .to(gv, { scaleY: 1, duration: .5, stagger: .1, ease: "none" })
-    .to(gh, { scaleX: 1, duration: .5, stagger: .1, ease: "none" }, "<.12")
-    .to(".layers", { autoAlpha: 1, duration: .3 }, "<");
+  /* 1–5 dibangun CEPAT & SERENTAK (overlapping): bingkai + grid + judul + terminal/sub + CTA + 3D gunungan muncul berbarengan */
+  tl.addLabel("grid", 0)
+    .to(".build-hint", { autoAlpha: 0, duration: .12 }, 0)
+    .to([hud, ".strip", fc, ".layers"], { autoAlpha: 1, duration: .12 }, 0)
+    .to(ft, { scaleX: 1, duration: .22, ease: "none" }, 0)
+    .to(fr, { scaleY: 1, duration: .22, ease: "none" }, .05)
+    .to(fbb, { scaleX: 1, duration: .22, ease: "none" }, .10)
+    .to(fl, { scaleY: 1, duration: .22, ease: "none" }, .15)
+    .to(gv, { scaleY: 1, duration: .25, stagger: .04, ease: "none" }, .06)
+    .to(gh, { scaleX: 1, duration: .25, stagger: .04, ease: "none" }, .08)
+    .to(H.querySelectorAll(".crop"), { scale: 1, autoAlpha: 1, stagger: .03, duration: .18 }, .04);
 
-  /* 2 judul: panah marquee-drag area judul (fromTo + invalidateOnRefresh aman saat ganti dimensi DevTools), klik, baris judul muncul */
-  tl.addLabel("judul");
-  tool("arrow");
-  tl.to(fc, { x: fn((l) => l.m.x), y: fn((l) => l.m.y), duration: .6 })
-    .to(fc, { x: fn((l) => l.m.x + l.m.w), y: fn((l) => l.m.y + l.m.h), duration: .9 })
+  /* 2 judul: jalan berbarengan mulai t=0.08 */
+  tl.addLabel("judul", .08);
+  tool("arrow", .08);
+  tl.to(fc, { x: fn((l) => l.m.x), y: fn((l) => l.m.y), duration: .14 }, .08)
+    .to(fc, { x: fn((l) => l.m.x + l.m.w), y: fn((l) => l.m.y + l.m.h), duration: .28 }, .22)
     .fromTo(marq,
       { x: fn((l) => l.m.x), y: fn((l) => l.m.y), width: 0, height: 0, autoAlpha: 0 },
       {
-        x: fn((l) => l.m.x), y: fn((l) => l.m.y), width: fn((l) => l.m.w), height: fn((l) => l.m.h), autoAlpha: 1, duration: .9, immediateRender: false,
+        x: fn((l) => l.m.x), y: fn((l) => l.m.y), width: fn((l) => l.m.w), height: fn((l) => l.m.h), autoAlpha: 1, duration: .28, immediateRender: false,
         onUpdate() { dim.textContent = `${Math.round(gsap.getProperty(marq, "width"))} × ${Math.round(gsap.getProperty(marq, "height"))}`; }
-      }, "<");
-  click();
-  tl.to(lns, { clipPath: "inset(0 0% 0 0)", stagger: .25, duration: .6, ease: "power2.out" }, "<")
-    .to(marq, { autoAlpha: 0, duration: .3 });
+      }, .22)
+    .to(lns, { clipPath: "inset(0 0% 0 0)", stagger: .06, duration: .32 }, .20)
+    .to(marq, { autoAlpha: 0, duration: .15 }, .52);
 
-  /* 3 teks: klik terminal, pen menulis subjudul */
-  tl.addLabel("teks")
-    .to(fc, { x: fn((l) => l.term.cx), y: fn((l) => l.term.cy), duration: .6 });
-  click();
-  tl.to(term, { autoAlpha: 1, scale: 1, duration: .4, ease: "back.out(2)" }, "<");
-  tool("pen");
-  tl.to(fc, { x: fn((l) => l.sub.x), y: fn((l) => l.sub.y + l.sub.h), duration: .5 })
-    .to(fc, { x: fn((l) => l.sub.x + l.sub.w), duration: .9, ease: "none" })
-    .to(sub, { clipPath: "inset(0 0% 0 0)", duration: .9, ease: "none" }, "<");
+  /* 3 teks: terminal & subjudul muncul berbarengan mulai t=0.16 */
+  tl.addLabel("teks", .16)
+    .to(term, { autoAlpha: 1, scale: 1, duration: .28, ease: "back.out(1.7)" }, .16)
+    .to(sub, { clipPath: "inset(0 0% 0 0)", duration: .34, ease: "none" }, .24);
+  tool("pen", .50);
+  tl.to(fc, { x: fn((l) => l.sub.x + l.sub.w), y: fn((l) => l.sub.y + l.sub.h), duration: .20 }, .50);
 
-  /* 4 aset: panah ambil tombol dari panel aset, drag ke tengah, guide snap */
-  tl.addLabel("aset");
-  tool("arrow");
-  tl.to([tray, cta], { autoAlpha: (i) => i ? .45 : 1, duration: .3 })
-    .to(fc, { x: fn((l) => l.ax), y: fn((l) => l.ay), duration: .6 }, "<");
-  click();
-  tl.to(cta, { autoAlpha: 1, scale: 1, duration: .2 }, "<")
-    .to(fc, { x: fn((l) => l.c.cx), y: fn((l) => l.c.cy), duration: 1 })
-    .to(cta, { x: 0, y: 0, duration: 1 }, "<")
-    .to([gx, gy], { autoAlpha: 1, duration: .15 }, "-=.3")
-    .to([gx, gy], { autoAlpha: 0, duration: .25 })
-    .to(tray, { autoAlpha: 0, duration: .3 }, "<");
+  /* 4 aset: tombol CTA & snap guide meluncur berbarengan mulai t=0.26 */
+  tl.addLabel("aset", .26)
+    .to(tray, { autoAlpha: 1, duration: .14 }, .26)
+    .to(cta, { autoAlpha: 1, scale: 1, x: 0, y: 0, duration: .38 }, .30)
+    .to([gx, gy], { autoAlpha: 1, duration: .12 }, .58)
+    .to([gx, gy, tray], { autoAlpha: 0, duration: .16 }, .72);
 
-  /* 5 gunungan: crosshair klik di dalam sel kanan-atas bingkai, gunungan jatuh & memantul */
-  tl.addLabel("gunungan");
-  tool("cross");
-  tl.to(fc, { x: fn((l) => l.W * (l.W < 600 ? .68 : .76)), y: fn((l) => l.H * .28), duration: .6 });
-  click();
-  tl.to(drop, { v: 1, duration: 1.3, ease: "bounce.out" }, "<")
-    .to([".hero-meta", ".hero-hint"].map((s) => $(s)), { autoAlpha: 1, stagger: .15, duration: .4 }, "-=.4");
+  /* 5 gunungan: jatuh berbarengan mulai t=0.32 & klik kursor di sel kanan-atas */
+  tl.addLabel("gunungan", .32);
+  tool("cross", .70);
+  tl.to(fc, { x: fn((l) => l.W * (l.W < 600 ? .68 : .76)), y: fn((l) => l.H * .28), duration: .22 }, .70);
+  click(.88);
+  tl.to(drop, { v: 1, duration: .55, ease: "back.out(1.4)" }, .32)
+    .to([".hero-meta", ".hero-hint"].map((s) => $(s)), { autoAlpha: 1, stagger: .06, duration: .25 }, .55);
 
-  /* 6 selesai: kursor & seluruh chrome editor memudar di dalam bingkai (tidak pernah keluar batas) */
-  tl.addLabel("selesai")
-    .to([fc, ...[".crop", ".layers", ".strip", ".hud", ".frame"].map((s) => H.querySelectorAll(s))], { autoAlpha: 0, duration: .4 })
+  /* 6 selesai: kursor & chrome editor memudar bersih di t=0.95 */
+  tl.addLabel("selesai", .95)
+    .to([fc, ...[".crop", ".layers", ".strip", ".hud", ".frame"].map((s) => H.querySelectorAll(s))], { autoAlpha: 0, duration: .22 }, .95)
     .addLabel("end");
 
   const names = ["grid", "judul", "teks", "aset", "gunungan", "selesai"];
@@ -201,7 +169,6 @@ if (!reduced) {
   clips.forEach((c, i) => { c.style.left = (starts[i] / dur * 100) + "%"; c.style.width = `calc(${(ends[i] - starts[i]) / dur * 100}% - 3px)`; });
   let lastIdx = -1;
   const pad = (n) => String(n).padStart(2, "0");
-  /* timecode jujur: progress scrub hero memetakan TC per frame 25fps (riset batch3 — HUD tak boleh bohong) */
   const setHud = (p) => {
     const f = Math.round(p * 12 * 25);
     tc.textContent = `00:00:${pad(Math.floor(f / 25))}:${pad(f % 25)}`;
@@ -216,21 +183,55 @@ if (!reduced) {
     state.textContent = names[idx];
   };
   ScrollTrigger.create({
-    trigger: H, start: "top top", end: "+=420%", pin: true, scrub: .75, animation: tl,
+    trigger: H, start: "top top", end: "+=160%", pin: true, scrub: .25, animation: tl,
     invalidateOnRefresh: true, onRefreshInit: measure,
     onUpdate: (self) => setHud(self.progress),
   });
-  /* di mobile tanpa .build, TC tetap membaca progress halaman keseluruhan */
-  if (reduced) tc.textContent = "00:00:12:00";
-  else if (!document.documentElement.classList.contains("build")) {
-    ScrollTrigger.create({
-      trigger: "body", start: "top top", end: "bottom bottom",
-      onUpdate: (self) => {
-        const f = Math.round(self.progress * 12 * 25);
-        tc.textContent = `00:00:${pad(Math.floor(f / 25))}:${pad(f % 25)}`;
-      },
+}
+
+/* build-on-scroll CEPAT & SERENTAK untuk SELURUH bagian lain (#stats, #tentang, #lomba, #timeline, .cta-final, .footer) */
+if (!reduced) {
+  const secSpecs = [
+    ["#stats", "01 / statistik", ".stat"],
+    ["#tentang", "02 / tentang", ".about-grid > *, .about-body p"],
+    ["#lomba", "03 / cabang lomba", ".section-head > *, .card"],
+    ["#timeline", "04 / timeline", "h2, .tl-dot, .tl-list li"],
+    [".cta-final", "05 / penutup", "h2, p, .cta-row"],
+    [".footer", "06 / sekretariat", ".foot-col, .foot-bottom"]
+  ];
+  secSpecs.forEach(([sel, label, childSel]) => {
+    const sec = document.querySelector(sel);
+    if (!sec) return;
+    sec.classList.add("sec-build");
+    const ui = document.createElement("div");
+    ui.className = "sb-ui";
+    ui.dataset.tag = label;
+    ui.setAttribute("aria-hidden", "true");
+    ui.innerHTML = `<span class="sb-line sb-t"></span><span class="sb-line sb-r"></span><span class="sb-line sb-b"></span><span class="sb-line sb-l"></span><span class="sb-c sb-c1"></span><span class="sb-c sb-c2"></span><span class="sb-c sb-c3"></span><span class="sb-c sb-c4"></span>`;
+    sec.prepend(ui);
+
+    const items = [...sec.querySelectorAll(childSel)];
+    const sbt = ui.querySelector(".sb-t"), sbb = ui.querySelector(".sb-b"), sbl = ui.querySelector(".sb-l"), sbr = ui.querySelector(".sb-r");
+    const crops = [...ui.querySelectorAll(".sb-c")];
+
+    const stl = gsap.timeline({
+      defaults: { ease: "power2.out" },
+      scrollTrigger: {
+        trigger: sec,
+        start: "top 92%",
+        end: sel === ".footer" ? "bottom bottom" : "top 38%",
+        scrub: .25
+      }
     });
-  }
+    stl.fromTo([sbt, sbb], { scaleX: 0 }, { scaleX: 1, duration: .3, ease: "none" }, 0)
+      .fromTo([sbl, sbr], { scaleY: 0 }, { scaleY: 1, duration: .3, ease: "none" }, 0)
+      .fromTo(crops, { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .2, stagger: .02 }, 0)
+      .fromTo(items,
+        { y: 24, scale: .94, autoAlpha: 0 },
+        { y: 0, scale: 1, autoAlpha: 1, duration: .45, stagger: .04 },
+        .04)
+      .to(ui, { autoAlpha: .25, duration: .25 }, .55);
+  });
 }
 
 /* story — pinned (mobile & desktop: tiap bab muncul satu-per-satu dengan jeda kosong & tahanan baca panjang) */
