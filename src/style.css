@@ -212,17 +212,19 @@ em{font-style:normal;color:var(--violet)}
 .js .reveal{opacity:1;transform:none}
 /* section build-on-scroll chrome: aktif di SELURUH section (#hero, #stats, #tentang, #lomba, #story, #timeline, .cta-final, .footer) */
 .sec-build{position:relative;overflow:clip}
+.sec-build:not(.hero):not(.story){padding-inline:clamp(2.4rem,6vw,4.5rem)}
+.footer.sec-build{padding-block:6rem 5.5rem}
 .sec-build>:not(.build-ui){position:relative;z-index:1}
 .build .sec-build>.build-ui{display:block;position:absolute;inset:0;z-index:2;pointer-events:none;overflow:clip}
-.sec-build:not(.hero) .frame{top:10%;bottom:12%;left:3%;right:3%}
-.sec-build:not(.hero) .hud{top:2.5%;left:3%}
-.sec-build:not(.hero) .strip{bottom:2.5%;left:3%;right:3%}
-.sec-build:not(.hero) .c1{left:calc(3% - 18px);top:calc(10% - 18px)}
-.sec-build:not(.hero) .c2{right:calc(3% - 18px);top:calc(10% - 18px)}
-.sec-build:not(.hero) .c3{left:calc(3% - 18px);bottom:calc(12% - 18px)}
-.sec-build:not(.hero) .c4{right:calc(3% - 18px);bottom:calc(12% - 18px)}
-.sec-build:not(.hero) .gx{top:10%;bottom:12%}
-.sec-build:not(.hero) .gy{left:3%;right:3%}
+.sec-build:not(.hero) .frame{top:8%;bottom:9%;left:2%;right:2%}
+.sec-build:not(.hero) .hud{top:2.2%;left:2%}
+.sec-build:not(.hero) .strip{bottom:2.2%;left:2%;right:2%}
+.sec-build:not(.hero) .c1{left:calc(2% - 18px);top:calc(8% - 18px)}
+.sec-build:not(.hero) .c2{right:calc(2% - 18px);top:calc(8% - 18px)}
+.sec-build:not(.hero) .c3{left:calc(2% - 18px);bottom:calc(9% - 18px)}
+.sec-build:not(.hero) .c4{right:calc(2% - 18px);bottom:calc(9% - 18px)}
+.sec-build:not(.hero) .gx{top:8%;bottom:9%}
+.sec-build:not(.hero) .gy{left:2%;right:2%}
 /* #story pinned 100dvh berada di bawah navbar fixed 4.25rem — samakan frame/hud dengan hero agar tidak tertutup navbar */
 .story.sec-build .frame{top:16%;bottom:10%;left:4%;right:4%}
 .story.sec-build .hud{top:5rem;left:4%}

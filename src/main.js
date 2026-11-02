@@ -220,7 +220,7 @@ if (!reduced) {
     state.textContent = names[idx];
   };
   ScrollTrigger.create({
-    trigger: H, start: "top top", end: "+=160%", pin: true, scrub: .25, animation: tl,
+    trigger: H, start: "top top", end: "+=230%", pin: true, scrub: .45, animation: tl,
     invalidateOnRefresh: true, onRefreshInit: measure,
     onUpdate: (self) => setHud(self.progress),
   });
@@ -242,7 +242,7 @@ if (!reduced) {
       <span class="gl gh1"></span><span class="gl gh2"></span>
     </div>
     <span class="crop c1"></span><span class="crop c2"></span><span class="crop c3"></span><span class="crop c4"></span>
-    <p class="hud mono" data-txt="rec "><span class="rec"></span><span class="tc" data-txt="00:04:00:00"></span> <span class="hud-state" data-txt="narasi 3d"></span></p>
+    <p class="hud mono" data-txt="rec "><span class="rec"></span><span class="tc" data-txt="00:04:00:00"></span> <span class="hud-state" data-txt="bab 01 / pola"></span></p>
     <div class="marq"><span class="dim mono" data-txt=""></span></div>
     <span class="guide gx"></span><span class="guide gy"></span>
     <div class="strip"><span class="clip on"></span><span class="clip"></span><span class="clip"></span><span class="clip"></span><span class="ph-wrap"><span class="ph"></span></span></div>
@@ -258,7 +258,7 @@ if (!reduced) {
   const scEls = [".s1", ".s2", ".s3", ".s4"].map((s) => stSec.querySelector(s));
   const scH2s = scEls.map((el) => el.querySelector("h2"));
 
-  let StL = { W: 0, H: 0, b: [{}, {}, {}, {}] };
+  let StL = { W: 1000, H: 800, b: [] };
   const stMeasure = () => {
     const W = stSec.offsetWidth, H = stSec.offsetHeight;
     const b = scH2s.map((h2) => {
@@ -285,11 +285,11 @@ if (!reduced) {
   const stTl = gsap.timeline({
     onUpdate: () => { sc1.flip(StL.W); sc2.flip(StL.W); },
     scrollTrigger: {
-      trigger: "#story", start: "top top", end: "+=900%", pin: true, scrub: 1,
+      trigger: "#story", start: "top top", end: "+=1000%", pin: true, scrub: 1,
       invalidateOnRefresh: true, onRefreshInit: stMeasure,
       onUpdate: (self) => {
-        scrollN = self.progress;
-        const f = Math.round(self.progress * 12 * 25);
+        scrollState.story = self.progress;
+        const f = Math.round(self.progress * 16 * 25);
         stc.dataset.txt = `00:04:${pad2(Math.floor(f / 25))}:${pad2(f % 25)}`;
         sphw.style.setProperty("--p", self.progress);
         const bi = Math.min(3, Math.floor(self.progress * 4));
@@ -343,17 +343,18 @@ if (!reduced) {
   });
 }
 
-/* build-on-scroll CEPAT & SERENTAK untuk SELURUH bagian lain (#stats, #tentang, #lomba, #timeline, .cta-final, .footer)
-   Setiap section dikerjakan secara paralel oleh 2–3 KURSOR SEKALIGUS (panitia ITO, desainer UI, koordinator) dengan kursor Adobe (Arrow, Pen, I-Beam, Move, Hand, Crosshair)! */
+/* build-on-scroll TEPAT DI TENGAH LAYAR untuk SELURUH bagian lain (#stats, #tentang, #lomba, #timeline, .cta-final, .footer)
+   Setiap section mulai dirakit saat masuk bawah tengah layar ("top 74%") dan baru selesai setelah lewat tengah layar ("bottom 28%"),
+   sehingga saat section berada tepat di tengah layar (center), kursor-kursor Adobe, marquee, dan bingkai masih aktif merakit! */
 if (!reduced) {
   const pad2 = (n) => String(n).padStart(2, "0");
   const secConfigs = [
-    { sel: "#stats", name: "statistik", target: ".stat", items: ".stat", clip: ".stat .num, .stat .label", stats: true, cursors: [["panitia ITO", "", "arrow", "cross"], ["data ITO", "c-alt", "ibeam", "move"]], start: "top 88%", end: "top 24%" },
-    { sel: "#tentang", name: "tentang", target: ".about-grid", items: ".about-grid > *, .about-body p", clip: "h2, .about-body p", cursors: [["panitia ITO", "", "pen", "arrow"], ["editor teks", "c-alt", "ibeam", "hand"]], start: "top 86%", end: "top 20%" },
-    { sel: "#lomba", name: "cabang lomba", target: ".cards", items: ".section-head > *, .card", clip: ".section-head h2, .section-note, .card-idx, .card h3, .card p", cards: true, cursors: [["panitia ITO", "", "arrow", "move"], ["desainer UI", "c-alt", "pen", "cross"], ["kurator lomba", "c-trd", "hand", "ibeam"]], start: "top 86%", end: "top 16%" },
-    { sel: "#timeline", name: "timeline", target: ".tl-list", items: "h2, .tl-dot, .tl-list li", clip: "h2, .tl-list b, .tl-when, .tl-list p", cursors: [["panitia ITO", "", "pen", "cross"], ["jadwal ITO", "c-alt", "move", "ibeam"]], start: "top 88%", end: "top 22%" },
-    { sel: ".cta-final", name: "penutup", target: "h2", items: "h2, p, .cta-row", clip: "h2, p", cursors: [["panitia ITO", "", "arrow", "cross"], ["desainer UI", "c-alt", "move", "hand"]], start: "top 92%", end: "top 38%" },
-    { sel: ".footer", name: "sekretariat", target: ".foot-grid", items: ".foot-col, .foot-bottom", clip: ".footer-brand, .foot-org, .foot-head", cursors: [["panitia ITO", "", "arrow", "hand"], ["sekretariat", "c-alt", "ibeam", "cross"]], start: "top 96%", end: "bottom bottom" }
+    { sel: "#stats", name: "statistik", target: ".stat", items: ".stat", clip: ".stat .num, .stat .label", stats: true, cursors: [["panitia ITO", "", "arrow", "cross"], ["data ITO", "c-alt", "ibeam", "move"]], start: "top 76%", end: "bottom 28%" },
+    { sel: "#tentang", name: "tentang", target: ".about-grid", items: ".about-grid > *, .about-body p", clip: "h2, .about-body p", cursors: [["panitia ITO", "", "pen", "arrow"], ["editor teks", "c-alt", "ibeam", "hand"]], start: "top 74%", end: "bottom 28%" },
+    { sel: "#lomba", name: "cabang lomba", target: ".cards", items: ".section-head > *, .card", clip: ".section-head h2, .section-note, .card-idx, .card h3, .card p", cards: true, cursors: [["panitia ITO", "", "arrow", "move"], ["desainer UI", "c-alt", "pen", "cross"], ["kurator lomba", "c-trd", "hand", "ibeam"]], start: "top 74%", end: "bottom 26%" },
+    { sel: "#timeline", name: "timeline", target: ".tl-list", items: "h2, .tl-dot, .tl-list li", clip: "h2, .tl-list b, .tl-when, .tl-list p", cursors: [["panitia ITO", "", "pen", "cross"], ["jadwal ITO", "c-alt", "move", "ibeam"]], start: "top 74%", end: "bottom 28%" },
+    { sel: ".cta-final", name: "penutup", target: "h2", items: "h2, p, .cta-row", clip: "h2, p", cursors: [["panitia ITO", "", "arrow", "cross"], ["desainer UI", "c-alt", "move", "hand"]], start: "top 78%", end: "bottom 32%" },
+    { sel: ".footer", name: "sekretariat", target: ".foot-grid", items: ".foot-col, .foot-bottom", clip: ".footer-brand, .foot-org, .foot-head", cursors: [["panitia ITO", "", "arrow", "hand"], ["sekretariat", "c-alt", "ibeam", "cross"]], start: "top 85%", end: "bottom bottom" }
   ];
 
   secConfigs.forEach((cfg, sIdx) => {
@@ -442,69 +443,69 @@ if (!reduced) {
     gsap.set(clips, { clipPath: "inset(0 100% 0 0)" });
     if (cardMarqs.length) gsap.set(cardMarqs, { autoAlpha: 0, scale: .96 });
 
-    /* Seluruh bagian section dibangun CEPAT & BERBARENGAN oleh semua kursor di section (t=0.00..0.75) */
+    /* Seluruh bagian section dibangun dengan kecepatan terukur di TENGAH LAYAR oleh semua kursor di section (t=0.00..0.86) */
     cs.forEach((c, idx) => c.setTool(stl, cfg.cursors[idx][2], 0));
-    stl.to([hud, strip, ...cs.map((c) => c.el)], { autoAlpha: 1, duration: .12 }, 0)
-      .to(ft, { scaleX: 1, duration: .22, ease: "none" }, 0)
-      .to(fr, { scaleY: 1, duration: .22, ease: "none" }, .04)
-      .to(fbb, { scaleX: 1, duration: .22, ease: "none" }, .08)
-      .to(fl, { scaleY: 1, duration: .22, ease: "none" }, .12)
-      .to(gv, { scaleY: 1, duration: .24, stagger: .04, ease: "none" }, .05)
-      .to(gh, { scaleX: 1, duration: .24, stagger: .04, ease: "none" }, .07)
-      .to(crops, { scale: 1, autoAlpha: 1, stagger: .03, duration: .16 }, .04);
+    stl.to([hud, strip, ...cs.map((c) => c.el)], { autoAlpha: 1, duration: .14 }, 0)
+      .to(ft, { scaleX: 1, duration: .26, ease: "none" }, 0)
+      .to(fr, { scaleY: 1, duration: .26, ease: "none" }, .05)
+      .to(fbb, { scaleX: 1, duration: .26, ease: "none" }, .10)
+      .to(fl, { scaleY: 1, duration: .26, ease: "none" }, .15)
+      .to(gv, { scaleY: 1, duration: .28, stagger: .05, ease: "none" }, .06)
+      .to(gh, { scaleX: 1, duration: .28, stagger: .05, ease: "none" }, .08)
+      .to(crops, { scale: 1, autoAlpha: 1, stagger: .04, duration: .20 }, .05);
 
     /* Kursor 1: menarik kotak seleksi .marq */
-    stl.to(cs[0].el, { x: sfn((l) => l.m.x), y: sfn((l) => l.m.y), duration: .14 }, .06)
-      .to(cs[0].el, { x: sfn((l) => Math.min(l.W * .94, l.m.x + l.m.w)), y: sfn((l) => Math.min(l.H * .84, l.m.y + l.m.h)), duration: .32 }, .20)
+    stl.to(cs[0].el, { x: sfn((l) => l.m.x), y: sfn((l) => l.m.y), duration: .16 }, .06)
+      .to(cs[0].el, { x: sfn((l) => Math.min(l.W * .94, l.m.x + l.m.w)), y: sfn((l) => Math.min(l.H * .84, l.m.y + l.m.h)), duration: .46 }, .22)
       .fromTo(marq,
         { x: sfn((l) => l.m.x), y: sfn((l) => l.m.y), width: 0, height: 0, autoAlpha: 0 },
         {
-          x: sfn((l) => l.m.x), y: sfn((l) => l.m.y), width: sfn((l) => l.m.w), height: sfn((l) => l.m.h), autoAlpha: 1, duration: .32, immediateRender: false,
+          x: sfn((l) => l.m.x), y: sfn((l) => l.m.y), width: sfn((l) => l.m.w), height: sfn((l) => l.m.h), autoAlpha: 1, duration: .46, immediateRender: false,
           onUpdate() { dim.dataset.txt = `${Math.round(gsap.getProperty(marq, "width"))} × ${Math.round(gsap.getProperty(marq, "height"))}`; }
-        }, .20);
-    cs[0].click(stl, .22);
+        }, .22);
+    cs[0].click(stl, .24);
 
     /* Kursor 2 (berjalan paralel dengan Kursor 1): menyusun elemen kedua/kanan */
     if (cs[1]) {
-      stl.to(cs[1].el, { x: sfn((l) => l.p2a.x), y: sfn((l) => l.p2a.y), duration: .22 }, .08)
-        .to(cs[1].el, { x: sfn((l) => l.p2b.x), y: sfn((l) => l.p2b.y), duration: .30 }, .30);
-      cs[1].click(stl, .32);
-      cs[1].setTool(stl, cfg.cursors[1][3], .46);
-      stl.to(cs[1].el, { x: sfn((l) => clampPt(l.W, l.H, l.m.cx + 48, l.m.cy + 18).x), y: sfn((l) => clampPt(l.W, l.H, l.m.cx + 48, l.m.cy + 18).y), duration: .22 }, .50);
-      cs[1].click(stl, .64);
+      stl.to(cs[1].el, { x: sfn((l) => l.p2a.x), y: sfn((l) => l.p2a.y), duration: .26 }, .08)
+        .to(cs[1].el, { x: sfn((l) => l.p2b.x), y: sfn((l) => l.p2b.y), duration: .38 }, .34);
+      cs[1].click(stl, .36);
+      cs[1].setTool(stl, cfg.cursors[1][3], .54);
+      stl.to(cs[1].el, { x: sfn((l) => clampPt(l.W, l.H, l.m.cx + 48, l.m.cy + 18).x), y: sfn((l) => clampPt(l.W, l.H, l.m.cx + 48, l.m.cy + 18).y), duration: .28 }, .56);
+      cs[1].click(stl, .76);
     }
 
     /* Kursor 3 (khusus #lomba 4 kartu): menyusun kartu tengah secara paralel */
     if (cs[2]) {
-      stl.to(cs[2].el, { x: sfn((l) => l.p3a.x), y: sfn((l) => l.p3a.y), duration: .24 }, .10)
-        .to(cs[2].el, { x: sfn((l) => l.p3b.x), y: sfn((l) => l.p3b.y), duration: .28 }, .34);
-      cs[2].click(stl, .36);
-      cs[2].setTool(stl, cfg.cursors[2][3], .48);
-      cs[2].click(stl, .60);
+      stl.to(cs[2].el, { x: sfn((l) => l.p3a.x), y: sfn((l) => l.p3a.y), duration: .28 }, .10)
+        .to(cs[2].el, { x: sfn((l) => l.p3b.x), y: sfn((l) => l.p3b.y), duration: .36 }, .38);
+      cs[2].click(stl, .40);
+      cs[2].setTool(stl, cfg.cursors[2][3], .56);
+      cs[2].click(stl, .72);
     }
 
     stl.to(items,
-      { y: 0, scale: 1, autoAlpha: 1, duration: .42, stagger: .04 },
-      .12)
+      { y: 0, scale: 1, autoAlpha: 1, duration: .54, stagger: .05 },
+      .16)
       .to(clips,
-        { clipPath: "inset(0 0% 0 0)", duration: .44, stagger: .04 },
-        .14);
+        { clipPath: "inset(0 0% 0 0)", duration: .56, stagger: .05 },
+        .18);
 
     if (cardMarqs.length) {
-      stl.fromTo(cardMarqs, { autoAlpha: 1, scale: .96 }, { autoAlpha: 0, scale: 1, duration: .45, stagger: .05, immediateRender: false }, .18);
+      stl.fromTo(cardMarqs, { autoAlpha: 1, scale: .96 }, { autoAlpha: 0, scale: 1, duration: .58, stagger: .06, immediateRender: false }, .22);
     }
 
-    cs[0].setTool(stl, cfg.cursors[0][3], .52);
-    stl.to(cs[0].el, { x: sfn((l) => l.m.cx), y: sfn((l) => l.m.cy), duration: .20 }, .52)
-      .to([gx, gy], { autoAlpha: 1, duration: .12 }, .54)
-      .to([gx, gy, marq], { autoAlpha: 0, duration: .16 }, .68);
-    cs[0].click(stl, .62);
+    cs[0].setTool(stl, cfg.cursors[0][3], .64);
+    stl.to(cs[0].el, { x: sfn((l) => l.m.cx), y: sfn((l) => l.m.cy), duration: .22 }, .64)
+      .to([gx, gy], { autoAlpha: 1, duration: .14 }, .66)
+      .to([gx, gy, marq], { autoAlpha: 0, duration: .18 }, .82);
+    cs[0].click(stl, .74);
 
-    /* Selesai: seluruh kursor & chrome editor memudar bersih di dalam bingkai */
-    stl.to([...cs.map((c) => c.el), hud, strip, ...crops, $(".frame")], { autoAlpha: 0, duration: .22 }, .78);
+    /* Selesai setelah melewati tengah layar: seluruh kursor & chrome editor memudar bersih */
+    stl.to([...cs.map((c) => c.el), hud, strip, ...crops, $(".frame")], { autoAlpha: 0, duration: .16 }, .86);
 
     ScrollTrigger.create({
-      trigger: sec, start: cfg.start, end: cfg.end, scrub: .25, animation: stl,
+      trigger: sec, start: cfg.start, end: cfg.end, scrub: .45, animation: stl,
       invalidateOnRefresh: true, onRefreshInit: smeasure,
       onUpdate: (self) => {
         const p = self.progress, f = Math.round(p * 4 * 25);
@@ -512,7 +513,7 @@ if (!reduced) {
         phw.style.setProperty("--p", p);
         cs.forEach((c) => c.flip(SL.W));
         if (statNums.length) {
-          const cp = Math.max(0, Math.min(1, (p - .12) / .50));
+          const cp = Math.max(0, Math.min(1, (p - .14) / .58));
           const ease = 1 - Math.pow(1 - cp, 3);
           statNums.forEach((n) => { n.textContent = Math.round(+n.dataset.target * ease); });
         }
