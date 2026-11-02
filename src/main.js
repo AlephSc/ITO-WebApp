@@ -91,7 +91,15 @@ const bindCursor = (el) => {
 /* hero build: seluruh bagian hero dibangun CEPAT & BERBARENGAN oleh 2 kursor kolaborator (panitia ITO & desainer UI) */
 const drop = { v: 1 }; /* dibaca loop 3D: 0 = gunungan di atas layar, 1 = mendarat */
 let scrollN = 0, in3D = true;
-document.addEventListener("visibilitychange", () => { in3D = !document.hidden; });
+ScrollTrigger.create({
+  trigger: "main", start: "top bottom", end: "#story bottom",
+  onToggle: (s) => { in3D = s.isActive && !document.hidden; }
+});
+document.addEventListener("visibilitychange", () => {
+  const story = document.getElementById("story");
+  const r = story ? story.getBoundingClientRect() : null;
+  in3D = !document.hidden && (!r || r.bottom > 0);
+});
 if (!reduced) {
   document.documentElement.classList.add("build");
   const H = document.getElementById("hero"), $ = (s) => H.querySelector(s), $$ = (s) => [...H.querySelectorAll(s)];
@@ -167,7 +175,7 @@ if (!reduced) {
       { x: fn((l) => l.m.x), y: fn((l) => l.m.y), width: 0, height: 0, autoAlpha: 0 },
       {
         x: fn((l) => l.m.x), y: fn((l) => l.m.y), width: fn((l) => l.m.w), height: fn((l) => l.m.h), autoAlpha: 1, duration: .44, immediateRender: false,
-        onUpdate() { dim.textContent = `${Math.round(gsap.getProperty(marq, "width"))} × ${Math.round(gsap.getProperty(marq, "height"))}`; }
+        onUpdate() { dim.textContent = `${Math.round(this.progress() * L.m.w)} × ${Math.round(this.progress() * L.m.h)}`; }
       }, .18)
     .to(lns, { clipPath: "inset(0 0% 0 0)", stagger: .07, duration: .38 }, .18)
     .to(marq, { autoAlpha: 0, duration: .15 }, .68);
@@ -331,7 +339,7 @@ if (!reduced) {
         { x: () => StL.b[i].x, y: () => StL.b[i].y, width: 0, height: 0, autoAlpha: 0 },
         {
           x: () => StL.b[i].x, y: () => StL.b[i].y, width: () => StL.b[i].w, height: () => StL.b[i].h, autoAlpha: 1, duration: .72, immediateRender: false,
-          onUpdate() { sdim.dataset.txt = `${Math.round(gsap.getProperty(smarq, "width"))} × ${Math.round(gsap.getProperty(smarq, "height"))}`; }
+          onUpdate() { sdim.dataset.txt = `${Math.round(this.progress() * StL.b[i].w)} × ${Math.round(this.progress() * StL.b[i].h)}`; }
         }, `b${i}+=0.22`)
       .fromTo(sc1.el,
         { x: () => StL.b[i].x, y: () => StL.b[i].y },
@@ -342,9 +350,20 @@ if (!reduced) {
       .to([sgx, sgy, smarq, sc1.el], { autoAlpha: 0, duration: .20 }, `b${i}+=1.16`)
       .to(el, { y: 0, duration: 1.9 }); /* selesai di-build pas di tengah: bersih tanpa kursor menutupi teks */
     if (i < 3) {
-      stTl.to(el, { autoAlpha: 0, y: -36, duration: .80 });
+      /* Exit: kursor I-Beam menyapu mundur dari kanan ke kiri menghapus teks (backspace erase) sembari bergerak ke atas */
+      sc1.setTool(stTl, "ibeam", `+=0`);
+      stTl.set(sc1.el, { x: () => StL.b[i].x + StL.b[i].w, y: () => StL.b[i].y + StL.b[i].h, autoAlpha: 1 })
+        .to(sc1.el, { x: () => StL.b[i].x, y: () => StL.b[i].y, duration: .75, ease: "power1.in" })
+        .to(h2, { clipPath: "inset(0 100% 0 0)", duration: .75, ease: "power1.in" }, "<")
+        .to(el, { y: -52, autoAlpha: 0, duration: .75, ease: "power1.in" }, "<")
+        .to(sc1.el, { autoAlpha: 0, duration: .15 });
     } else {
-      stTl.to([sui.querySelector(".hud"), sui.querySelector(".strip"), ...scrops, sui.querySelector(".frame")], { autoAlpha: 0, duration: .45 });
+      sc1.setTool(stTl, "ibeam", `+=0`);
+      stTl.set(sc1.el, { x: () => StL.b[3].x + StL.b[3].w, y: () => StL.b[3].y + StL.b[3].h, autoAlpha: 1 })
+        .to(sc1.el, { x: () => StL.b[3].x, y: () => StL.b[3].y, duration: .75, ease: "power1.in" })
+        .to(h2, { clipPath: "inset(0 100% 0 0)", duration: .75, ease: "power1.in" }, "<")
+        .to(el, { y: -52, autoAlpha: 0, duration: .75, ease: "power1.in" }, "<")
+        .to([sc1.el, sui.querySelector(".hud"), sui.querySelector(".strip"), ...scrops, sui.querySelector(".frame")], { autoAlpha: 0, duration: .35 });
     }
   });
 }
@@ -488,7 +507,7 @@ if (!reduced) {
         { x: sfn((l) => l.m.x), y: sfn((l) => l.m.y), width: 0, height: 0, autoAlpha: 0 },
         {
           x: sfn((l) => l.m.x), y: sfn((l) => l.m.y), width: sfn((l) => l.m.w), height: sfn((l) => l.m.h), autoAlpha: 1, duration: .56, immediateRender: false,
-          onUpdate() { dim.dataset.txt = `${Math.round(gsap.getProperty(marq, "width"))} × ${Math.round(gsap.getProperty(marq, "height"))}`; }
+          onUpdate() { dim.dataset.txt = `${Math.round(this.progress() * SL.m.w)} × ${Math.round(this.progress() * SL.m.h)}`; }
         }, .18);
     cs[0].click(stl, .18);
 
@@ -613,6 +632,7 @@ addEventListener("resize", () => {
 renderer.setSize(innerWidth, innerHeight);
 
 const clock = new THREE.Clock();
+let colorDirty = false, lastBurst = -1, lastT = 0;
 /* ticker tunggal: render 3D dititipkan ke gsap.ticker (dulu rAF sendiri = 2x wake-up per frame) */
 gsap.ticker.add(() => {
   if (!in3D) return;
@@ -624,34 +644,52 @@ gsap.ticker.add(() => {
   hover = !!ray.ray.intersectPlane(plane, hit) && ndc.x < 2;
   if (hover) { local.copy(hit); mesh.worldToLocal(local); }
   const rAge = t - rippleT;
-  for (let i = 0; i < cells.length; i++) {
-    const c = cells[i], h = home[i];
-    const wob = Math.sin(t * 1.2 + i * 0.35) * 0.06;
-    let x = h.x * (1 + burst * 0.14) + wob;
-    let y = h.y + Math.sin(t * 0.7 + c[3]) * 0.12 + burst * 0.5;
-    let z = h.z * (1 + burst * 0.14);
-    let glow = 0;
-    if (hover) { /* repel: kubus dekat kursor terdorong keluar & menyala */
-      const dx = x - local.x, dy = y - local.y, dz = z - local.z;
-      const d = Math.hypot(dx, dy, dz);
-      if (d < 2.4) { const f = (1 - d / 2.4) ** 2; x += dx / (d || 1) * f * 1.3; y += dy / (d || 1) * f * 1.3; z += dz / (d || 1) * f * 1.3; glow = f; }
+  const activeFx = hover || rAge < 2.2;
+
+  /* update matriks kubus hanya jika posisi berubah (burst morph, hover, ripple, atau micro-float berkala) */
+  const burstChanged = Math.abs(burst - lastBurst) > 0.001;
+  const needMatrixUpdate = activeFx || burstChanged || (t - lastT > 0.032);
+  if (needMatrixUpdate) {
+    lastT = t;
+    lastBurst = burst;
+    for (let i = 0; i < cells.length; i++) {
+      const c = cells[i], h = home[i];
+      const wob = Math.sin(t * 1.2 + i * 0.35) * 0.06;
+      let x = h.x * (1 + burst * 0.14) + wob;
+      let y = h.y + Math.sin(t * 0.7 + c[3]) * 0.12 + burst * 0.5;
+      let z = h.z * (1 + burst * 0.14);
+      let glow = 0;
+      if (hover) { /* repel: kubus dekat kursor terdorong keluar & menyala */
+        const dx = x - local.x, dy = y - local.y, dz = z - local.z;
+        const d = Math.hypot(dx, dy, dz);
+        if (d < 2.4) { const f = (1 - d / 2.4) ** 2; x += dx / (d || 1) * f * 1.3; y += dy / (d || 1) * f * 1.3; z += dz / (d || 1) * f * 1.3; glow = f; }
+      }
+      if (rAge < 2.2) { /* ripple gelombang dari titik klik */
+        const d = Math.hypot(h.x - ripple.x, h.y - ripple.y, h.z - ripple.z);
+        const w = Math.exp(-((d - rAge * 6) ** 2)) * (1 - rAge / 2.2);
+        y += w * 1.1; glow = Math.max(glow, w);
+      }
+      dummy.position.set(x, y, z);
+      dummy.scale.setScalar(1 + glow * 0.35);
+      dummy.updateMatrix();
+      mesh.setMatrixAt(i, dummy.matrix);
+      if (activeFx || colorDirty) {
+        mesh.setColorAt(i, col.copy(baseCol[i]).lerp(cGlow, glow));
+      }
     }
-    if (rAge < 2.2) { /* ripple gelombang dari titik klik */
-      const d = Math.hypot(h.x - ripple.x, h.y - ripple.y, h.z - ripple.z);
-      const w = Math.exp(-((d - rAge * 6) ** 2)) * (1 - rAge / 2.2);
-      y += w * 1.1; glow = Math.max(glow, w);
+    mesh.instanceMatrix.needsUpdate = true;
+    if (activeFx) {
+      mesh.instanceColor.needsUpdate = true;
+      colorDirty = true;
+    } else if (colorDirty) {
+      mesh.instanceColor.needsUpdate = true;
+      colorDirty = false;
     }
-    dummy.position.set(x, y, z);
-    dummy.scale.setScalar(1 + glow * 0.35);
-    dummy.updateMatrix();
-    mesh.setMatrixAt(i, dummy.matrix);
-    mesh.setColorAt(i, col.copy(baseCol[i]).lerp(cGlow, glow));
   }
-  mesh.instanceMatrix.needsUpdate = true;
-  mesh.instanceColor.needsUpdate = true;
+
   /* auto-rotate + drag dengan inersia + tilt pointer */
   if (!dragging) { dragRot += vel; vel *= 0.94; }
-  mesh.rotation.y = t * 0.14 + dragRot + mx * 0.5 + scrollN * 1.6 + window.scrollY * 0.0004;
+  mesh.rotation.y = t * 0.14 + dragRot + mx * 0.5 + scrollN * 1.6;
   mesh.rotation.x = my * 0.15;
   mesh.position.y = Math.sin(t * 0.5) * 0.2 + 0.6 + (1 - drop.v) * 11;
   renderer.render(scene, camera);
