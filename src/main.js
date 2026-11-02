@@ -189,72 +189,213 @@ if (!reduced) {
   });
 }
 
-/* build-on-scroll CEPAT & SERENTAK untuk SELURUH bagian lain (#stats, #tentang, #lomba, #timeline, .cta-final, .footer) */
+/* build-on-scroll CEPAT & SERENTAK untuk SELURUH bagian lain (#stats, #tentang, #lomba, #story, #timeline, .cta-final, .footer)
+   Setiap section mendapatkan kanvas editor lengkap: 4 sisi bingkai (.ft,.fr,.fb-b,.fl), grid 3×3 (.gv,.gh), crop marks,
+   HUD rec + timecode, timeline strip (.strip), kotak seleksi oranye (.marq + dimensi w×h), snap guides (.gx,.gy),
+   serta kursor kolaborator 'panitia ITO' (arrow/pen/cross + ring klik) yang merakit seluruh elemen section secara serentak! */
 if (!reduced) {
-  const secSpecs = [
-    ["#stats", "01 / statistik", ".stat"],
-    ["#tentang", "02 / tentang", ".about-grid > *, .about-body p"],
-    ["#lomba", "03 / cabang lomba", ".section-head > *, .card"],
-    ["#timeline", "04 / timeline", "h2, .tl-dot, .tl-list li"],
-    [".cta-final", "05 / penutup", "h2, p, .cta-row"],
-    [".footer", "06 / sekretariat", ".foot-col, .foot-bottom"]
+  const pad2 = (n) => String(n).padStart(2, "0");
+  const secConfigs = [
+    { sel: "#stats", name: "statistik", target: ".stat", items: ".stat", clip: ".stat .label, .stat .num", start: "top 86%", end: "top 20%" },
+    { sel: "#tentang", name: "tentang", target: ".about-grid", items: ".about-grid > *, .about-body p", clip: "h2, .about-body p", start: "top 84%", end: "top 16%" },
+    { sel: "#lomba", name: "cabang lomba", target: ".cards", items: ".section-head > *, .card", clip: ".section-head h2, .section-note, .card h3, .card p", cards: true, start: "top 84%", end: "top 12%" },
+    { sel: "#timeline", name: "timeline", target: ".tl-list", items: "h2, .tl-dot, .tl-list li", clip: "h2, .tl-list b, .tl-list p", start: "top 84%", end: "top 16%" },
+    { sel: ".cta-final", name: "penutup", target: "h2", items: "h2, p, .cta-row", clip: "h2, p", start: "top 88%", end: "top 28%" },
+    { sel: ".footer", name: "sekretariat", target: ".foot-grid", items: ".foot-col, .foot-bottom", clip: ".footer-brand, .foot-org, .foot-head", start: "top 94%", end: "bottom bottom" }
   ];
-  secSpecs.forEach(([sel, label, childSel]) => {
-    const sec = document.querySelector(sel);
+
+  secConfigs.forEach((cfg, sIdx) => {
+    const sec = document.querySelector(cfg.sel);
     if (!sec) return;
     sec.classList.add("sec-build");
+
     const ui = document.createElement("div");
-    ui.className = "sb-ui";
-    ui.dataset.tag = label;
+    ui.className = "build-ui";
     ui.setAttribute("aria-hidden", "true");
-    ui.innerHTML = `<span class="sb-line sb-t"></span><span class="sb-line sb-r"></span><span class="sb-line sb-b"></span><span class="sb-line sb-l"></span><span class="sb-c sb-c1"></span><span class="sb-c sb-c2"></span><span class="sb-c sb-c3"></span><span class="sb-c sb-c4"></span>`;
+    ui.innerHTML = `
+      <div class="frame">
+        <span class="fb ft"></span><span class="fb fr"></span><span class="fb fb-b"></span><span class="fb fl"></span>
+        <span class="gl gv1"></span><span class="gl gv2"></span>
+        <span class="gl gh1"></span><span class="gl gh2"></span>
+      </div>
+      <span class="crop c1"></span><span class="crop c2"></span><span class="crop c3"></span><span class="crop c4"></span>
+      <p class="hud mono" data-txt="rec "><span class="rec"></span><span class="tc" data-txt="00:0${sIdx + 1}:00:00"></span> <span class="hud-state" data-txt="${cfg.name}"></span></p>
+      <div class="marq"><span class="dim mono" data-txt=""></span></div>
+      <span class="guide gx"></span><span class="guide gy"></span>
+      <div class="strip"><span class="clip on"></span><span class="clip on"></span><span class="clip on"></span><span class="ph-wrap"><span class="ph"></span></span></div>
+      <div class="fcursor">
+        <svg class="fc-arrow" viewBox="0 0 16 22" width="18" height="24"><path d="M1 1v17l4.5-4 3 7 2.6-1.1-3-6.8H14z"/></svg>
+        <svg class="fc-cross" viewBox="0 0 32 32" width="32" height="32"><circle cx="16" cy="16" r="6"/><path d="M16 0v10M16 22v10M0 16h10M22 16h10"/></svg>
+        <svg class="fc-pen" viewBox="0 0 24 24" width="24" height="24"><path d="M2 22l3-9 9-9 6 6-9 9z M2 22l6.5-6.5"/><circle cx="10" cy="14" r="1.4"/></svg>
+        <span class="fc-ring"></span><span class="fc-tag mono" data-txt="panitia ITO"></span>
+      </div>`;
     sec.prepend(ui);
 
-    const items = [...sec.querySelectorAll(childSel)];
-    const sbt = ui.querySelector(".sb-t"), sbb = ui.querySelector(".sb-b"), sbl = ui.querySelector(".sb-l"), sbr = ui.querySelector(".sb-r");
-    const crops = [...ui.querySelectorAll(".sb-c")];
+    if (cfg.cards) {
+      sec.querySelectorAll(".card").forEach((c) => {
+        const cm = document.createElement("span");
+        cm.className = "card-marq";
+        cm.setAttribute("aria-hidden", "true");
+        c.appendChild(cm);
+      });
+    }
+
+    const $ = (s) => ui.querySelector(s), $$ = (s) => [...ui.querySelectorAll(s)];
+    const fc = $(".fcursor"), arrow = $(".fc-arrow"), cross = $(".fc-cross"), pen = $(".fc-pen"), ring = $(".fc-ring");
+    const ft = $(".ft"), fr = $(".fr"), fbb = $(".fb-b"), fl = $(".fl"), gv = $$(".gv1,.gv2"), gh = $$(".gh1,.gh2"), crops = $$(".crop");
+    const marq = $(".marq"), dim = $(".dim"), gx = $(".gx"), gy = $(".gy"), hud = $(".hud"), tc = $(".tc"), strip = $(".strip"), phw = $(".ph-wrap");
+    const items = [...sec.querySelectorAll(cfg.items)], clips = [...sec.querySelectorAll(cfg.clip)], cardMarqs = [...sec.querySelectorAll(".card-marq")];
+    const targetEl = sec.querySelector(cfg.target) || items[0] || sec;
+
+    const sbox = (el) => {
+      let x = 0, y = 0, e = el;
+      while (e && e !== sec) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; }
+      return { x, y, w: el.offsetWidth, h: el.offsetHeight, cx: x + el.offsetWidth / 2, cy: y + el.offsetHeight / 2 };
+    };
+    let SL = {};
+    const smeasure = () => {
+      const W = sec.offsetWidth, H = sec.offsetHeight, tb = sbox(targetEl);
+      const mx = Math.max(W * .04, tb.x - 8), my = Math.max(H * .11, tb.y - 8);
+      const mw = Math.min(W * .92 - mx, tb.w + 16), mh = Math.min(H * .86 - my, tb.h + 16);
+      SL = { W, H, m: { x: mx, y: my, w: Math.max(80, mw), h: Math.max(40, mh), cx: mx + mw / 2, cy: my + mh / 2 } };
+      gy.style.top = SL.m.cy + "px";
+    };
+    smeasure();
+    const sfn = (f) => () => f(SL);
+    const scur = (on) => [[arrow, on === "arrow"], [cross, on === "cross"], [pen, on === "pen"]].map(([el, v]) => ({ el, v }));
 
     const stl = gsap.timeline({
       defaults: { ease: "power2.out" },
-      scrollTrigger: {
-        trigger: sec,
-        start: "top 92%",
-        end: sel === ".footer" ? "bottom bottom" : "top 38%",
-        scrub: .25
+      onUpdate: () => fc.classList.toggle("flip", +gsap.getProperty(fc, "x") > SL.W * .97 - 115)
+    });
+    const stool = (on, at) => scur(on).forEach(({ el, v }) => stl.set(el, { autoAlpha: v ? 1 : 0 }, at));
+    const sclick = (at) => stl.fromTo(ring, { scale: .3, autoAlpha: 1 }, { scale: 1.7, autoAlpha: 0, duration: .2, ease: "power1.out" }, at);
+
+    gsap.set(fc, { x: sfn((l) => l.W * .04), y: sfn((l) => l.H * .12), autoAlpha: 0 });
+    gsap.set([arrow, cross, ring], { autoAlpha: 0 });
+    gsap.set([ft, fbb, ...gh], { scaleX: 0 });
+    gsap.set([fr, fl, ...gv], { scaleY: 0 });
+    gsap.set([crops, hud, strip, marq, gx, gy], { autoAlpha: 0 });
+    gsap.set(crops, { scale: 0 });
+
+    /* Seluruh bagian section dibangun CEPAT & BERBARENGAN (t=0.00..0.75), lalu chrome memudar di t=0.78..1.00 */
+    stl.to([hud, strip, fc], { autoAlpha: 1, duration: .12 }, 0)
+      .to(ft, { scaleX: 1, duration: .22, ease: "none" }, 0)
+      .to(fr, { scaleY: 1, duration: .22, ease: "none" }, .04)
+      .to(fbb, { scaleX: 1, duration: .22, ease: "none" }, .08)
+      .to(fl, { scaleY: 1, duration: .22, ease: "none" }, .12)
+      .to(gv, { scaleY: 1, duration: .24, stagger: .04, ease: "none" }, .05)
+      .to(gh, { scaleX: 1, duration: .24, stagger: .04, ease: "none" }, .07)
+      .to(crops, { scale: 1, autoAlpha: 1, stagger: .03, duration: .16 }, .04);
+
+    stool("arrow", .06);
+    stl.to(fc, { x: sfn((l) => l.m.x), y: sfn((l) => l.m.y), duration: .14 }, .06)
+      .to(fc, { x: sfn((l) => Math.min(l.W * .95, l.m.x + l.m.w)), y: sfn((l) => Math.min(l.H * .86, l.m.y + l.m.h)), duration: .32 }, .20)
+      .fromTo(marq,
+        { x: sfn((l) => l.m.x), y: sfn((l) => l.m.y), width: 0, height: 0, autoAlpha: 0 },
+        {
+          x: sfn((l) => l.m.x), y: sfn((l) => l.m.y), width: sfn((l) => l.m.w), height: sfn((l) => l.m.h), autoAlpha: 1, duration: .32, immediateRender: false,
+          onUpdate() { dim.dataset.txt = `${Math.round(gsap.getProperty(marq, "width"))} × ${Math.round(gsap.getProperty(marq, "height"))}`; }
+        }, .20);
+    sclick(.22);
+
+    stl.fromTo(items,
+      { y: 28, scale: .92, autoAlpha: 0 },
+      { y: 0, scale: 1, autoAlpha: 1, duration: .42, stagger: .04, immediateRender: false },
+      .12)
+      .fromTo(clips,
+        { clipPath: "inset(0 100% 0 0)" },
+        { clipPath: "inset(0 0% 0 0)", duration: .44, stagger: .04, immediateRender: false },
+        .14);
+
+    if (cardMarqs.length) {
+      stl.fromTo(cardMarqs, { autoAlpha: 1, scale: .96 }, { autoAlpha: 0, scale: 1, duration: .45, stagger: .05 }, .18);
+    }
+
+    stool("cross", .52);
+    stl.to(fc, { x: sfn((l) => l.m.cx), y: sfn((l) => l.m.cy), duration: .20 }, .52)
+      .to([gx, gy], { autoAlpha: 1, duration: .12 }, .54)
+      .to([gx, gy, marq], { autoAlpha: 0, duration: .16 }, .68);
+    sclick(.62);
+
+    /* Selesai: seluruh chrome editor memudar bersih di dalam bingkai */
+    stl.to([fc, hud, strip, ...crops, $(".frame")], { autoAlpha: 0, duration: .22 }, .78);
+
+    ScrollTrigger.create({
+      trigger: sec, start: cfg.start, end: cfg.end, scrub: .25, animation: stl,
+      invalidateOnRefresh: true, onRefreshInit: smeasure,
+      onUpdate: (self) => {
+        const p = self.progress, f = Math.round(p * 4 * 25);
+        tc.dataset.txt = `00:0${sIdx + 1}:${pad2(Math.floor(f / 25))}:${pad2(f % 25)}`;
+        phw.style.setProperty("--p", p);
       }
     });
-    stl.fromTo([sbt, sbb], { scaleX: 0 }, { scaleX: 1, duration: .3, ease: "none" }, 0)
-      .fromTo([sbl, sbr], { scaleY: 0 }, { scaleY: 1, duration: .3, ease: "none" }, 0)
-      .fromTo(crops, { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .2, stagger: .02 }, 0)
-      .fromTo(items,
-        { y: 24, scale: .94, autoAlpha: 0 },
-        { y: 0, scale: 1, autoAlpha: 1, duration: .45, stagger: .04 },
-        .04)
-      .to(ui, { autoAlpha: .25, duration: .25 }, .55);
   });
 }
 
-/* story — pinned (mobile & desktop: tiap bab muncul satu-per-satu dengan jeda kosong & tahanan baca panjang) */
+/* story — pinned (mobile & desktop: tiap bab dibangun dengan kanvas editor + jeda kosong & tahanan baca panjang) */
 if (!reduced) {
   document.documentElement.classList.add("story-pin");
+  const stSec = document.getElementById("story");
+  stSec.classList.add("sec-build");
+  const sui = document.createElement("div");
+  sui.className = "build-ui";
+  sui.setAttribute("aria-hidden", "true");
+  sui.innerHTML = `
+    <div class="frame">
+      <span class="fb ft"></span><span class="fb fr"></span><span class="fb fb-b"></span><span class="fb fl"></span>
+      <span class="gl gv1"></span><span class="gl gv2"></span>
+      <span class="gl gh1"></span><span class="gl gh2"></span>
+    </div>
+    <span class="crop c1"></span><span class="crop c2"></span><span class="crop c3"></span><span class="crop c4"></span>
+    <p class="hud mono" data-txt="rec "><span class="rec"></span><span class="tc" data-txt="00:04:00:00"></span> <span class="hud-state" data-txt="narasi 3d"></span></p>
+    <div class="strip"><span class="clip on"></span><span class="clip on"></span><span class="clip on"></span><span class="clip on"></span><span class="ph-wrap"><span class="ph"></span></span></div>
+    <div class="fcursor">
+      <svg class="fc-cross" viewBox="0 0 32 32" width="32" height="32"><circle cx="16" cy="16" r="6"/><path d="M16 0v10M16 22v10M0 16h10M22 16h10"/></svg>
+      <span class="fc-ring"></span><span class="fc-tag mono" data-txt="panitia ITO"></span>
+    </div>`;
+  stSec.prepend(sui);
+  const sfc = sui.querySelector(".fcursor"), stc = sui.querySelector(".tc"), sphw = sui.querySelector(".ph-wrap");
+  const sft = sui.querySelector(".ft"), sfr = sui.querySelector(".fr"), sfbb = sui.querySelector(".fb-b"), sfl = sui.querySelector(".fl");
+  const sgv = [...sui.querySelectorAll(".gv1,.gv2")], sgh = [...sui.querySelectorAll(".gh1,.gh2")], scrops = [...sui.querySelectorAll(".crop")];
+  gsap.set([sft, sfbb, ...sgh], { scaleX: 0 });
+  gsap.set([sfr, sfl, ...sgv], { scaleY: 0 });
+  gsap.set([scrops, sui.querySelector(".hud"), sui.querySelector(".strip"), sfc], { autoAlpha: 0 });
+  gsap.set(sfc, { x: () => stSec.offsetWidth * .18, y: () => stSec.offsetHeight * .26 });
+
+  const pad2 = (n) => String(n).padStart(2, "0");
   gsap.timeline({
     scrollTrigger: {
       trigger: "#story", start: "top top", end: "+=900%", pin: true, scrub: 1,
       invalidateOnRefresh: true,
-      onUpdate: (self) => { scrollN = self.progress; }
+      onUpdate: (self) => {
+        scrollN = self.progress;
+        const f = Math.round(self.progress * 8 * 25);
+        stc.dataset.txt = `00:04:${pad2(Math.floor(f / 25))}:${pad2(f % 25)}`;
+        sphw.style.setProperty("--p", self.progress);
+        sfc.classList.toggle("flip", +gsap.getProperty(sfc, "x") > stSec.offsetWidth * .96 - 115);
+      }
     }
   })
-    .from(".s1", { autoAlpha: 0, y: 60, duration: 1 })
+    .to([sui.querySelector(".hud"), sui.querySelector(".strip"), sfc], { autoAlpha: 1, duration: .4 }, 0)
+    .to([sft, sfbb, ...sgh], { scaleX: 1, duration: .6, stagger: .05 }, 0)
+    .to([sfr, sfl, ...sgv], { scaleY: 1, duration: .6, stagger: .05 }, 0)
+    .to(scrops, { autoAlpha: 1, duration: .4, stagger: .05 }, .1)
+    .from(".s1", { autoAlpha: 0, y: 60, duration: 1 }, 0)
     .to(".s1", { y: 0, duration: 2.2 })
     .to(".s1", { autoAlpha: 0, yPercent: -45, duration: 1 })
+    .to(sfc, { x: () => stSec.offsetWidth * .72, y: () => stSec.offsetHeight * .30, duration: .8 }, "<")
     .fromTo(".s2", { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: 1 }, "+=0.6")
     .to(".s2", { y: 0, duration: 2.2 })
     .to(".s2", { autoAlpha: 0, yPercent: -45, duration: 1 })
+    .to(sfc, { x: () => stSec.offsetWidth * .24, y: () => stSec.offsetHeight * .68, duration: .8 }, "<")
     .fromTo(".s3", { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: 1 }, "+=0.6")
     .to(".s3", { y: 0, duration: 2.2 })
     .to(".s3", { autoAlpha: 0, yPercent: -45, duration: 1 })
+    .to(sfc, { x: () => stSec.offsetWidth * .50, y: () => stSec.offsetHeight * .25, duration: .8 }, "<")
     .fromTo(".s4", { autoAlpha: 0, scale: 0.85 }, { autoAlpha: 1, scale: 1, duration: 1 }, "+=0.6")
-    .to(".s4", { scale: 1, duration: 2.4 });
+    .to(".s4", { scale: 1, duration: 1.8 })
+    .to([sfc, sui.querySelector(".hud"), sui.querySelector(".strip"), ...scrops, sui.querySelector(".frame")], { autoAlpha: 0, duration: .6 });
 }
 
 /* 3D gunungan */

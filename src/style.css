@@ -203,20 +203,22 @@ em{font-style:normal;color:var(--violet)}
 
 /* reveal, visible by default: hidden state only under .js (gate 62) */
 .js .reveal{opacity:1;transform:none}
-/* section build-on-scroll chrome (aktif di seluruh section selain hero) */
-.sec-build{position:relative}
-.sb-ui{position:absolute;inset:1.25rem .75rem;pointer-events:none;z-index:0}
-.sb-line{position:absolute;background:var(--line)}
-.sb-t,.sb-b{left:0;right:0;height:1px;transform-origin:0 50%}
-.sb-t{top:0}.sb-b{bottom:0;transform-origin:100% 50%}
-.sb-l,.sb-r{top:0;bottom:0;width:1px;transform-origin:50% 0}
-.sb-l{left:0}.sb-r{right:0;transform-origin:50% 100%}
-.sb-c{position:absolute;width:12px;height:12px;border:0 solid var(--punch)}
-.sb-c1{left:-6px;top:-6px;border-right-width:1px;border-bottom-width:1px}
-.sb-c2{right:-6px;top:-6px;border-left-width:1px;border-bottom-width:1px}
-.sb-c3{left:-6px;bottom:-6px;border-right-width:1px;border-top-width:1px}
-.sb-c4{right:-6px;bottom:-6px;border-left-width:1px;border-top-width:1px}
-.sb-ui::after{content:attr(data-tag);position:absolute;right:.75rem;top:.5rem;font-family:var(--font-mono);font-size:.7rem;color:var(--punch-ink);background:var(--punch);padding:2px 7px;border-radius:4px}
+/* section build-on-scroll chrome: aktif di SELURUH section (#hero, #stats, #tentang, #lomba, #story, #timeline, .cta-final, .footer) */
+.sec-build{position:relative;overflow:clip}
+.sec-build>:not(.build-ui){position:relative;z-index:1}
+.build .sec-build>.build-ui{display:block;position:absolute;inset:0;z-index:2;pointer-events:none;overflow:clip}
+.sec-build:not(.hero) .frame{top:10%;bottom:12%;left:3%;right:3%}
+.sec-build:not(.hero) .hud{top:2.5%;left:3%}
+.sec-build:not(.hero) .strip{bottom:2.5%;left:3%;right:3%}
+.sec-build:not(.hero) .c1{left:calc(3% - 18px);top:calc(10% - 18px)}
+.sec-build:not(.hero) .c2{right:calc(3% - 18px);top:calc(10% - 18px)}
+.sec-build:not(.hero) .c3{left:calc(3% - 18px);bottom:calc(12% - 18px)}
+.sec-build:not(.hero) .c4{right:calc(3% - 18px);bottom:calc(12% - 18px)}
+.sec-build:not(.hero) .gx{top:10%;bottom:12%}
+.sec-build:not(.hero) .gy{left:3%;right:3%}
+.card{position:relative}
+.card-marq{position:absolute;inset:-4px;border:1px dashed var(--punch);border-radius:var(--radius);pointer-events:none}
+[data-txt]::after{content:attr(data-txt)}
 /* font-probe: placeholder setinggi baris teks terminal selama font async belum siap (anti CLS) */
 .font-probe{position:absolute;visibility:hidden;font-family:var(--font-mono);font-size:.95rem;line-height:1.5;height:1.5em;pointer-events:none}
 @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none;transition:none}}
