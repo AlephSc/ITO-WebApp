@@ -129,8 +129,15 @@ em{font-style:normal;color:var(--violet)}
 .fc-arrow{left:0;top:0;fill:var(--ink-bright);stroke:var(--bg);stroke-width:1.2}
 .fc-cross{left:-16px;top:-16px;fill:none;stroke:var(--punch);stroke-width:1.5}
 .fc-pen{left:-2px;top:-22px;fill:var(--violet);stroke:var(--ink-bright);stroke-width:1.2}
+.fc-ibeam{left:-10px;top:-12px;fill:none;stroke:var(--violet);stroke-width:1.8}
+.fc-move{left:-12px;top:-12px;fill:none;stroke:var(--rec);stroke-width:1.6}
+.fc-hand{left:-11px;top:-11px;fill:var(--bg2);stroke:var(--punch);stroke-width:1.5}
 .fc-ring{position:absolute;left:-14px;top:-14px;width:28px;height:28px;border-radius:50%;border:2px solid var(--punch)}
 .fc-tag{position:absolute;left:18px;top:22px;white-space:nowrap;font-size:.7rem;background:var(--punch);color:var(--punch-ink);padding:4px 8px;border-radius:4px}
+.fcursor.c-alt .fc-tag{background:var(--violet);color:var(--punch-ink)}
+.fcursor.c-trd .fc-tag{background:var(--rec);color:var(--ink-bright)}
+.fcursor.c-alt .fc-ring{border-color:var(--violet)}
+.fcursor.c-trd .fc-ring{border-color:var(--rec)}
 .fcursor.flip .fc-tag{left:auto;right:8px}
 @media (max-width:768px){
   .build .hero{padding-top:4.5rem;padding-bottom:3.25rem;gap:.65rem}
