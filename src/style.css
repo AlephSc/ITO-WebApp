@@ -147,8 +147,8 @@ em{font-style:normal;color:var(--violet)}
 }
 
 /* stats band */
-.stats{display:flex;gap:clamp(2rem,6vw,5rem);justify-content:center;flex-wrap:wrap;text-align:center;padding-block:3.5rem;border-block:1px solid var(--line-soft);max-width:none;background:var(--stats-tint)}
-.stat .num{font-family:var(--font-display);font-weight:700;font-size:clamp(2.4rem,5vw,3.6rem);display:block;color:var(--punch);font-variant-numeric:tabular-nums}
+.stats{display:flex;gap:clamp(2rem,6vw,5rem);justify-content:center;flex-wrap:wrap;text-align:center;padding-block:3.5rem;border-block:1px solid var(--line-soft);max-width:none;background:var(--stats-tint);min-height:160px}
+.stat .num{font-family:var(--font-display);font-weight:700;font-size:clamp(2.4rem,5vw,3.6rem);display:block;color:var(--punch);font-variant-numeric:tabular-nums;line-height:1.15;min-height:1.15em}
 .stat .label{color:var(--muted);font-size:.9rem}
 
 /* about */
