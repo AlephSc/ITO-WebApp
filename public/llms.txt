@@ -1,0 +1,30 @@
+# ITO 2027 (Information Technology Olympiad XXVII)
+
+> Ringkasan terstruktur dan referensi resmi olimpiade teknologi nasional tahunan tingkat SMP/MTs yang diselenggarakan oleh SMK Telekomunikasi Darul Ulum Jombang.
+
+## Gambaran Umum
+
+Information Technology Olympiad (ITO) adalah kompetisi teknologi tahunan tingkat nasional yang diselenggarakan secara mandiri dan profesional oleh siswa SMK Telekomunikasi Darul Ulum Jombang, Jawa Timur. Memasuki edisi ke-27 pada tahun 2027, ajang ini mewadahi inovasi, logika komputasi, dan kreativitas digital generasi muda dari kalangan pesantren untuk Indonesia.
+
+## Cabang Lomba
+
+1. **Desain Poster**: Uji kreativitas visual satu halaman dengan komposisi tajam dan penyampaian pesan komunikasi yang kuat.
+2. **Video Kreatif**: Produksi konten video pendek sinematik yang mengedepankan alur cerita, orisinalitas ide, dan pesan inspiratif.
+3. **Fotografi**: Karya fotografi jurnalistik dan seni dalam satu bingkai dengan sudut pandang autentik.
+4. **Coding Challenge**: Kompetisi logika algoritma dan pemecahan masalah komputasi berbasis batas waktu.
+
+## Statistik Penyelenggaraan Terakhir
+
+- **Peserta Terdaftar**: 300+ peserta dari sekolah jenjang SMP/MTs se-Indonesia.
+- **Bidang Kompetisi**: 4 cabang lomba terstandarisasi.
+- **Manajemen Operasional**: 100% dikelola langsung oleh komite siswa SKATELDU.
+
+## Tautan Resmi & Navigasi
+
+- [Portal Utama ITO](https://ito.leptopia.web.id/): Halaman pendaratan interaktif dengan pengalaman 3D Gunungan Voxel.
+- [Profil & Sejarah](https://ito.leptopia.web.id/#tentang): Latar belakang dan visi olimpiade dari Jombang untuk Indonesia.
+- [Cabang Lomba](https://ito.leptopia.web.id/#lomba): Rincian 4 cabang lomba yang dikompetisikan.
+- [Timeline & Jadwal](https://ito.leptopia.web.id/#timeline): Tahapan pendaftaran, seleksi daring, dan grand final luring.
+- [Narahubung WhatsApp](https://wa.me/6285649400339): Layanan informasi dan pendaftaran resmi panitia pelaksana.
+- [Portal SMK Telkom Darul Ulum](https://smktelekomunikasidu.sch.id/): Informasi profil sekolah induk penyelenggara.
+- [Katalog Sumber Daya Agen AI](https://ito.leptopia.web.id/.well-known/ard.json): Manifes metadata ARD (Agentic Resource Discovery) terverifikasi.

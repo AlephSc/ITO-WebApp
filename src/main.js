@@ -88,8 +88,8 @@ const bindCursor = (el) => {
   };
 };
 
-/* hero build: seluruh bagian hero dibangun CEPAT & BERBARENGAN oleh 2 kursor kolaborator (panitia ITO & desainer UI) */
-const drop = { v: 1 }; /* dibaca loop 3D: 0 = gunungan di atas layar, 1 = mendarat */
+/* hero build: seluruh bagian hero dibangun CEPAT & OTOMATIS saat load oleh 2 kursor kolaborator (panitia ITO & desainer UI) */
+const drop = { v: 0 }; /* dibaca loop 3D: 0 = gunungan di atas layar, 1 = mendarat */
 let scrollN = 0, in3D = true;
 ScrollTrigger.create({
   trigger: "main", start: "top bottom", end: "#story bottom",
@@ -133,8 +133,8 @@ if (!reduced) {
   document.fonts?.ready.then(() => ScrollTrigger.refresh());
   const fn = (f) => () => f(L);
   const tl = gsap.timeline({
-    defaults: { ease: "power2.out" },
-    onUpdate: () => { c1.flip(L.W); c2.flip(L.W); }
+    paused: true,
+    defaults: { ease: "power2.out" }
   });
 
   gsap.set(c1.el, { x: fn((l) => l.W * .04), y: fn((l) => l.H * .16), autoAlpha: 0 });
@@ -152,69 +152,69 @@ if (!reduced) {
   c1.setTool(tl, "pen", 0);
   c2.setTool(tl, "ibeam", 0);
   tl.addLabel("grid", 0)
-    .to(".build-hint", { autoAlpha: 0, duration: .12 }, 0)
-    .to([hud, ".strip", c1.el, c2.el, ".layers"], { autoAlpha: 1, duration: .12 }, 0)
-    .to(ft, { scaleX: 1, duration: .22, ease: "none" }, 0)
-    .to(fr, { scaleY: 1, duration: .22, ease: "none" }, .05)
-    .to(fbb, { scaleX: 1, duration: .22, ease: "none" }, .10)
-    .to(fl, { scaleY: 1, duration: .22, ease: "none" }, .15)
-    .to(gv, { scaleY: 1, duration: .25, stagger: .04, ease: "none" }, .06)
-    .to(gh, { scaleX: 1, duration: .25, stagger: .04, ease: "none" }, .08)
-    .to(H.querySelectorAll(".crop"), { scale: 1, autoAlpha: 1, stagger: .03, duration: .18 }, .04);
+    .to(".build-hint", { autoAlpha: 0, duration: .18 }, .05)
+    .to([hud, ".strip", c1.el, c2.el, ".layers"], { autoAlpha: 1, duration: .20 }, 0)
+    .to(ft, { scaleX: 1, duration: .35, ease: "none" }, 0)
+    .to(fr, { scaleY: 1, duration: .35, ease: "none" }, .06)
+    .to(fbb, { scaleX: 1, duration: .35, ease: "none" }, .12)
+    .to(fl, { scaleY: 1, duration: .35, ease: "none" }, .18)
+    .to(gv, { scaleY: 1, duration: .35, stagger: .05, ease: "none" }, .08)
+    .to(gh, { scaleX: 1, duration: .35, stagger: .05, ease: "none" }, .10)
+    .to(H.querySelectorAll(".crop"), { scale: 1, autoAlpha: 1, stagger: .03, duration: .22 }, .05);
 
-  /* Kursor 1 (panitia ITO — Pen -> Arrow): dari sudut bingkai ke kiri-atas judul, lalu tarik .marq presisi hingga sudut kanan-bawah judul */
-  tl.addLabel("judul", .06);
-  c1.setTool(tl, "arrow", .14);
+  /* Kursor 1 (panitia ITO — Pen -> Arrow): tarik .marq presisi untuk judul */
+  tl.addLabel("judul", .32);
+  c1.setTool(tl, "arrow", .40);
   tl.fromTo(c1.el,
     { x: fn((l) => l.W * .04), y: fn((l) => l.H * .16) },
-    { x: fn((l) => l.m.x), y: fn((l) => l.m.y), duration: .14, immediateRender: false }, .04)
+    { x: fn((l) => l.m.x), y: fn((l) => l.m.y), duration: .22, immediateRender: false }, .18)
     .fromTo(c1.el,
       { x: fn((l) => l.m.x), y: fn((l) => l.m.y) },
-      { x: fn((l) => l.m.x + l.m.w), y: fn((l) => l.m.y + l.m.h), duration: .44, immediateRender: false }, .18)
+      { x: fn((l) => l.m.x + l.m.w), y: fn((l) => l.m.y + l.m.h), duration: .58, immediateRender: false }, .40)
     .fromTo(marq,
       { x: fn((l) => l.m.x), y: fn((l) => l.m.y), width: 0, height: 0, autoAlpha: 0 },
       {
-        x: fn((l) => l.m.x), y: fn((l) => l.m.y), width: fn((l) => l.m.w), height: fn((l) => l.m.h), autoAlpha: 1, duration: .44, immediateRender: false,
+        x: fn((l) => l.m.x), y: fn((l) => l.m.y), width: fn((l) => l.m.w), height: fn((l) => l.m.h), autoAlpha: 1, duration: .58, immediateRender: false,
         onUpdate() { dim.textContent = `${Math.round(this.progress() * L.m.w)} × ${Math.round(this.progress() * L.m.h)}`; }
-      }, .18)
-    .to(lns, { clipPath: "inset(0 0% 0 0)", stagger: .07, duration: .38 }, .18)
-    .to(marq, { autoAlpha: 0, duration: .15 }, .68);
-  c1.click(tl, .62);
+      }, .40)
+    .to(lns, { clipPath: "inset(0 0% 0 0)", stagger: .10, duration: .48 }, .42)
+    .to(marq, { autoAlpha: 0, duration: .18 }, 1.05);
+  c1.click(tl, 1.00);
 
-  /* Kursor 2 (desainer UI — I-Beam -> Move): ketik .terminal (0.04..0.18), sapu .hero-sub (0.20..0.48), lalu tempatkan .cta-row (0.48..0.72) */
-  tl.addLabel("teks", .12);
+  /* Kursor 2 (desainer UI — I-Beam -> Move): ketik .terminal, sapu .hero-sub, lalu pasang .cta-row */
+  tl.addLabel("teks", .18);
   tl.fromTo(c2.el,
     { x: fn((l) => l.term.x), y: fn((l) => l.term.cy) },
-    { x: fn((l) => l.term.x + l.term.w), y: fn((l) => l.term.cy), duration: .14, immediateRender: false }, .04)
-    .to(term, { autoAlpha: 1, scale: 1, duration: .22, ease: "back.out(1.7)" }, .06);
-  c2.click(tl, .16);
+    { x: fn((l) => l.term.x + l.term.w), y: fn((l) => l.term.cy), duration: .18, immediateRender: false }, .12)
+    .to(term, { autoAlpha: 1, scale: 1, duration: .28, ease: "back.out(1.7)" }, .15);
+  c2.click(tl, .30);
 
   tl.fromTo(c2.el,
     { x: fn((l) => l.term.x + l.term.w), y: fn((l) => l.term.cy) },
-    { x: fn((l) => l.sub.x), y: fn((l) => l.sub.cy), duration: .06, immediateRender: false }, .18)
+    { x: fn((l) => l.sub.x), y: fn((l) => l.sub.cy), duration: .12, immediateRender: false }, .35)
     .fromTo(c2.el,
       { x: fn((l) => l.sub.x), y: fn((l) => l.sub.cy) },
-      { x: fn((l) => Math.min(l.W * .93, l.sub.x + l.sub.w)), y: fn((l) => l.sub.y + l.sub.h), duration: .28, ease: "none", immediateRender: false }, .24)
-    .to(sub, { clipPath: "inset(0 0% 0 0)", duration: .28, ease: "none" }, .24);
+      { x: fn((l) => Math.min(l.W * .93, l.sub.x + l.sub.w)), y: fn((l) => l.sub.y + l.sub.h), duration: .42, ease: "none", immediateRender: false }, .45)
+    .to(sub, { clipPath: "inset(0 0% 0 0)", duration: .42, ease: "none" }, .45);
 
-  tl.addLabel("aset", .30);
-  c2.setTool(tl, "move", .52);
-  tl.to(tray, { autoAlpha: 1, duration: .12 }, .28)
+  tl.addLabel("aset", .90);
+  c2.setTool(tl, "move", 1.00);
+  tl.to(tray, { autoAlpha: 1, duration: .15 }, .85)
     .fromTo(c2.el,
       { x: fn((l) => Math.min(l.W * .93, l.sub.x + l.sub.w)), y: fn((l) => l.sub.y + l.sub.h) },
-      { x: fn((l) => l.c.x + l.c.w), y: fn((l) => l.c.cy), duration: .22, immediateRender: false }, .52)
-    .to(cta, { autoAlpha: 1, scale: 1, x: 0, y: 0, duration: .38 }, .34)
-    .to([gx, gy], { autoAlpha: 1, duration: .12 }, .72)
-    .to([gx, gy, tray], { autoAlpha: 0, duration: .16 }, .82);
-  c2.click(tl, .74);
+      { x: fn((l) => l.c.x + l.c.w), y: fn((l) => l.c.cy), duration: .32, immediateRender: false }, 1.00)
+    .to(cta, { autoAlpha: 1, scale: 1, x: 0, y: 0, duration: .42 }, .95)
+    .to([gx, gy], { autoAlpha: 1, duration: .15 }, 1.30)
+    .to([gx, gy, tray], { autoAlpha: 0, duration: .18 }, 1.50);
+  c2.click(tl, 1.32);
 
-  tl.addLabel("gunungan", .28)
-    .to(drop, { v: 1, duration: .55, ease: "back.out(1.4)" }, .28)
-    .to([".hero-meta", ".hero-hint"].map((s) => $(s)), { autoAlpha: 1, stagger: .06, duration: .25 }, .58);
+  tl.addLabel("gunungan", .95)
+    .to(drop, { v: 1, duration: .70, ease: "back.out(1.4)" }, .95)
+    .to([".hero-meta", ".hero-hint"].map((s) => $(s)), { autoAlpha: 1, stagger: .08, duration: .30 }, 1.35);
 
-  /* 6 selesai: kedua kursor & chrome editor memudar bersih di t=0.92 */
-  tl.addLabel("selesai", .92)
-    .to([c1.el, c2.el, ...[".crop", ".layers", ".strip", ".hud", ".frame"].map((s) => H.querySelectorAll(s))], { autoAlpha: 0, duration: .20 }, .92)
+  /* selesai: kedua kursor & chrome editor memudar bersih */
+  tl.addLabel("selesai", 1.78)
+    .to([c1.el, c2.el, ...[".crop", ".layers", ".strip", ".hud", ".frame"].map((s) => H.querySelectorAll(s))], { autoAlpha: 0, duration: .35 }, 1.78)
     .addLabel("end");
 
   const names = ["grid", "judul", "teks", "aset", "gunungan", "selesai"];
@@ -235,11 +235,15 @@ if (!reduced) {
     clips.forEach((c, i) => c.classList.toggle("on", i <= idx));
     state.textContent = names[idx];
   };
-  ScrollTrigger.create({
-    trigger: H, start: "top top", end: "+=190%", pin: true, scrub: .35, animation: tl,
-    invalidateOnRefresh: true, onRefreshInit: measure,
-    onUpdate: (self) => setHud(self.progress),
+
+  tl.eventCallback("onUpdate", () => {
+    c1.flip(L.W); c2.flip(L.W);
+    setHud(tl.progress());
   });
+
+  window.addEventListener("resize", measure, { passive: true });
+  /* Hero auto-build langsung jalan otomatis saat dibuka (~2.1 detik) */
+  tl.play();
 }
 
 /* story — pinned (mobile & desktop: tiap bab adalah 1 teks terpusat, sehingga CUKUP 1 KURSOR yang membangun tepat di tengah lalu memudar saat dibaca)
@@ -375,7 +379,6 @@ if (!reduced) {
 if (!reduced) {
   const pad2 = (n) => String(n).padStart(2, "0");
   const secConfigs = [
-    { sel: "#stats", name: "statistik", boxEls: ".stat", items: ".stat", clip: ".stat .num, .stat .label", stats: true, cursors: [["panitia ITO", "", "arrow", "cross"]], start: "top 92%", end: "center 52%" },
     { sel: "#tentang", name: "tentang", boxEls: "h2, .about-body p", items: ".about-grid > *, .about-body p", clip: "h2, .about-body p", cursors: [["panitia ITO", "", "ibeam", "arrow"]], start: "top 92%", end: "center 52%" },
     { sel: "#lomba", name: "cabang lomba", boxEls: ".section-head h2, .card", boxElsMobile: ".section-head h2, .card:nth-child(-n+2)", items: ".section-head > *, .card", clip: ".section-head h2, .section-note, .card-idx, .card h3, .card p", cards: true, cursors: [["panitia ITO", "", "arrow", "move"], ["desainer UI", "c-alt", "pen", "cross"]], start: "top 92%", end: "center 52%" },
     { sel: "#timeline", name: "timeline", boxEls: ".tl-dot, .tl-list b, .tl-when, .tl-list p", items: "h2, .tl-dot, .tl-list li", clip: "h2, .tl-list b, .tl-when, .tl-list p", cursors: [["panitia ITO", "", "pen", "cross"]], start: "top 92%", end: "center 52%" },
@@ -566,40 +569,99 @@ if (!THREE) return;
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x0a0d24, 0.03);
+scene.fog = new THREE.FogExp2(0x0a0d24, 0.028);
+
+/* Kamera dinaikkan agar Wayang Gunungan pas presisi di tengah desktop */
 const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
-camera.position.set(0, 2.2, 14);
-camera.lookAt(0, 0.4, 0);
+camera.position.set(0, 1.2, 13.5);
+camera.lookAt(0, 0.5, 0);
 
-scene.add(new THREE.AmbientLight(0x7c5cff, 1.1));
-const key = new THREE.PointLight(0xff9e3d, 90); key.position.set(6, 9, 6); scene.add(key);
-const fill = new THREE.PointLight(0x7c5cff, 55); fill.position.set(-9, 4, -5); scene.add(fill);
+scene.add(new THREE.AmbientLight(0x7c5cff, 1.2));
+const key = new THREE.PointLight(0xffd700, 85); key.position.set(6, 9, 7); scene.add(key);
+const fill = new THREE.PointLight(0x7c5cff, 60); fill.position.set(-9, 5, -5); scene.add(fill);
+const topLight = new THREE.PointLight(0x00f5d4, 45); topLight.position.set(0, 12, 4); scene.add(topLight);
 
-/* gunungan: profile lebar bawah → puncak, lengkung sinus */
-const CUBE = 0.55, cells = [];
-for (let x = -6; x <= 6; x++) for (let z = -6; z <= 6; z++) {
-  const r = Math.hypot(x, z); if (r > 6.2) continue;
-  const h = Math.max(0, 10 - r * 2.2) + Math.sin(r * 1.5) * 0.8;
-  for (let y = 0; y < h; y++) cells.push([x * CUBE, y * CUBE, z * CUBE, r, y]);
+/* 3D Wayang Gunungan (Kayon) voxel:
+   - Tangkai gapit bawah
+   - Platform & gapura tengah berlorong (sacred gateway)
+   - Batang pohon hayat & cabang
+   - Sayap daun berlekuk (scalloped leaf lobes)
+   - Puncak mahkota lancip */
+const CUBE = 0.52, cells = [];
+for (let y = -4; y <= 11; y++) {
+  let hw = 0.9;
+  if (y < -1) hw = 0.9;
+  else if (y === -1) hw = 2.8;
+  else if (y === 0) hw = 4.0;
+  else if (y <= 2) hw = 4.8 + y * 0.5;
+  else if (y <= 5) hw = 6.0 - (y - 3) * 0.4 + (y % 2 === 1 ? 0.5 : 0.0);
+  else if (y <= 8) hw = 4.8 - (y - 5) * 1.0;
+  else hw = Math.max(0.4, 1.5 - (y - 8) * 0.45);
+
+  const maxX = Math.round(hw);
+  for (let x = -maxX; x <= maxX; x++) {
+    const dist = Math.abs(x);
+    if (dist > hw) continue;
+
+    const isStem = y < -1;
+    const isCrown = y >= 8;
+    const isTrunk = Math.abs(x) <= 1 && y >= 2 && y <= 7;
+    const isGateDoor = Math.abs(x) === 0 && (y === 0 || y === 1);
+    const isGateFrame = Math.abs(x) <= 2 && y >= 0 && y <= 2;
+    const isBranch = (Math.abs(x) === 2 || Math.abs(x) === 3) && (y === 4 || y === 6);
+
+    if (isGateDoor) continue;
+
+    let zMax = 0;
+    if (isStem) zMax = 1;
+    else if (isGateFrame) zMax = 2;
+    else if (isTrunk || isCrown) zMax = 1;
+    else if (dist <= hw - 1.2) zMax = 1;
+
+    let cat = "indigo";
+    if (isCrown) cat = "cyan";
+    else if (isStem) cat = "stem";
+    else if (isTrunk || isGateFrame || isBranch) cat = "gold";
+    else if (dist >= hw - 0.7) cat = "edge";
+
+    for (let z = -zMax; z <= zMax; z++) {
+      cells.push({ x: x * CUBE, y: (y - 3.5) * CUBE, z: z * CUBE, cat, y, r: Math.hypot(x, z) });
+    }
+  }
 }
-const geo = new THREE.BoxGeometry(CUBE * 0.92, CUBE * 0.92, CUBE * 0.92);
-const mat = new THREE.MeshStandardMaterial({ roughness: 0.35, metalness: 0.45 });
+
+const geo = new THREE.BoxGeometry(CUBE * 0.90, CUBE * 0.90, CUBE * 0.90);
+const mat = new THREE.MeshStandardMaterial({ roughness: 0.32, metalness: 0.55 });
 const mesh = new THREE.InstancedMesh(geo, mat, cells.length);
 const dummy = new THREE.Object3D(), col = new THREE.Color();
-const cCool = new THREE.Color(0x7c5cff), cWarm = new THREE.Color(0xff9e3d);
-cells.forEach(([x, y, z, r, yi], i) => {
-  dummy.position.set(x, y - 3.5, z); dummy.updateMatrix();
+
+const cGold = new THREE.Color(0xffd700);     /* Emas kencana */
+const cEdgeGold = new THREE.Color(0xffb703); /* Gold rim */
+const cIndigo = new THREE.Color(0x7c5cff);   /* Indigo tech */
+const cViolet = new THREE.Color(0xa78bfa);   /* Violet */
+const cCyan = new THREE.Color(0x00f5d4);     /* Aksen cyan mahkota */
+const cStem = new THREE.Color(0x3e3256);     /* Tangkai bronze indigo */
+const cGlow = new THREE.Color(0xffe66d);     /* Pendar emas hover repel */
+
+const baseCol = cells.map((c) => {
+  if (c.cat === "cyan") return cCyan.clone();
+  if (c.cat === "gold") return cGold.clone();
+  if (c.cat === "edge") return cEdgeGold.clone();
+  if (c.cat === "stem") return cStem.clone();
+  const t = Math.max(0, Math.min(1, (c.y - 0) / 8));
+  return cIndigo.clone().lerp(cViolet, t);
+});
+
+cells.forEach((c, i) => {
+  dummy.position.set(c.x, c.y, c.z); dummy.updateMatrix();
   mesh.setMatrixAt(i, dummy.matrix);
-  const t = yi / 10;
-  mesh.setColorAt(i, col.clone().lerpColors(cCool, cWarm, t * t));
+  mesh.setColorAt(i, baseCol[i]);
 });
 mesh.instanceColor.needsUpdate = true;
 scene.add(mesh);
-const baseCol = cells.map((_, i) => { const c = new THREE.Color(); mesh.getColorAt(i, c); return c; });
-const cGlow = new THREE.Color(0xffd29a);
 
 /* posisi awal tiap kubus untuk transisi story (urai → naik) */
-const home = cells.map(([x, y, z, r]) => ({ x, y: y - 3.5, z, spread: 1 }));
+const home = cells.map((c) => ({ x: c.x, y: c.y, z: c.z, r: c.r }));
 
 /* interaksi: tilt pointer, drag putar + inersia, hover repel + glow, klik ripple (listener hanya saat 3D hidup) */
 let mx = 0, my = 0, dragRot = 0, vel = 0, dragging = false, px = 0;
@@ -654,15 +716,15 @@ gsap.ticker.add(() => {
     lastBurst = burst;
     for (let i = 0; i < cells.length; i++) {
       const c = cells[i], h = home[i];
-      const wob = Math.sin(t * 1.2 + i * 0.35) * 0.06;
+      const wob = Math.sin(t * 1.2 + i * 0.35) * 0.05;
       let x = h.x * (1 + burst * 0.14) + wob;
-      let y = h.y + Math.sin(t * 0.7 + c[3]) * 0.12 + burst * 0.5;
+      let y = h.y + Math.sin(t * 0.7 + c.r) * 0.12 + burst * 0.5;
       let z = h.z * (1 + burst * 0.14);
       let glow = 0;
-      if (hover) { /* repel: kubus dekat kursor terdorong keluar & menyala */
+      if (hover) { /* repel: kubus dekat kursor terdorong keluar & pendar emas */
         const dx = x - local.x, dy = y - local.y, dz = z - local.z;
         const d = Math.hypot(dx, dy, dz);
-        if (d < 2.4) { const f = (1 - d / 2.4) ** 2; x += dx / (d || 1) * f * 1.3; y += dy / (d || 1) * f * 1.3; z += dz / (d || 1) * f * 1.3; glow = f; }
+        if (d < 2.5) { const f = (1 - d / 2.5) ** 2; x += dx / (d || 1) * f * 1.4; y += dy / (d || 1) * f * 1.4; z += dz / (d || 1) * f * 1.4; glow = f; }
       }
       if (rAge < 2.2) { /* ripple gelombang dari titik klik */
         const d = Math.hypot(h.x - ripple.x, h.y - ripple.y, h.z - ripple.z);
@@ -674,7 +736,7 @@ gsap.ticker.add(() => {
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
       if (activeFx || colorDirty) {
-        mesh.setColorAt(i, col.copy(baseCol[i]).lerp(cGlow, glow));
+        mesh.setColorAt(i, col.copy(baseCol[i]).lerp(cGlow, glow * 0.9));
       }
     }
     mesh.instanceMatrix.needsUpdate = true;
@@ -691,7 +753,7 @@ gsap.ticker.add(() => {
   if (!dragging) { dragRot += vel; vel *= 0.94; }
   mesh.rotation.y = t * 0.14 + dragRot + mx * 0.5 + scrollN * 1.6;
   mesh.rotation.x = my * 0.15;
-  mesh.position.y = Math.sin(t * 0.5) * 0.2 + 0.6 + (1 - drop.v) * 11;
+  mesh.position.y = Math.sin(t * 0.5) * 0.2 + 0.4 + (1 - drop.v) * 14;
   renderer.render(scene, camera);
 });
 }

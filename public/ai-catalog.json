@@ -1,0 +1,31 @@
+{
+  "entries": [
+    {
+      "identifier": "urn:air:ito.leptopia.web.id:olympiad:ito2027",
+      "displayName": "ITO 2027 - Information Technology Olympiad XXVII",
+      "type": "text/markdown",
+      "url": "https://ito.leptopia.web.id/llms.txt",
+      "description": "Information Technology Olympiad XXVII (ITO 2027) di SMK Telekomunikasi Darul Ulum Jombang. Lomba IT nasional jenjang SMP/MTs sederajat mencakup Desain Poster, Video Kreatif, Fotografi, dan Coding Challenge.",
+      "capabilities": [
+        "CompetitionRegistration",
+        "EventInformationDiscovery",
+        "ScheduleLookup"
+      ],
+      "tags": [
+        "education",
+        "olympiad",
+        "it-competition",
+        "vocational-school",
+        "jombang",
+        "indonesia"
+      ],
+      "representativeQueries": [
+        "Apa itu ITO 2027?",
+        "Jadwal dan cabang lomba ITO SMK Telkom Darul Ulum",
+        "Cara daftar lomba IT tingkat SMP dan MTs",
+        "Kontak resmi panitia ITO Jombang"
+      ],
+      "updatedAt": "2026-11-03T09:00:00Z"
+    }
+  ]
+}

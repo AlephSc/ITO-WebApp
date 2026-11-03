@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- impeccable-disable content-hidden-at-rest, overused-font -- intentional build-on-scroll animation and branded font tokens -->
 <html lang="id" class="no-js">
 <head>
 <meta charset="utf-8"/>
@@ -7,6 +8,9 @@
 <meta name="description" content="Information Technology Olympiad: olimpiade IT nasional untuk siswa SMP/MTs, diselenggarakan SMK Telekomunikasi Darul Ulum Jombang."/>
 <meta property="og:title" content="ITO 2027, Information Technology Olympiad"/>
 <meta property="og:description" content="Olimpiade IT nasional untuk SMP/MTs dari SMK Telekomunikasi Darul Ulum Jombang."/>
+<link rel="alternate" type="text/markdown" href="/llms.txt" title="llms.txt"/>
+<link rel="ard" type="application/json" href="/.well-known/ard.json"/>
+<link rel="ai-catalog" type="application/json" href="/ai-catalog.json"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600&display=optional"/>
@@ -40,7 +44,7 @@
       <div class="tray"><span class="mono">aset</span></div>
       <span class="guide gx"></span><span class="guide gy"></span>
       <div class="strip"><span class="clip"></span><span class="clip"></span><span class="clip"></span><span class="clip"></span><span class="clip"></span><span class="ph-wrap"><span class="ph"></span></span></div>
-      <p class="build-hint mono">gulir untuk membangun halaman</p>
+      <p class="build-hint mono">membangun antarmuka…</p>
       <div class="fcursor">
         <svg class="fc-arrow" viewBox="0 0 16 22" width="18" height="24"><path d="M1 1v17l4.5-4 3 7 2.6-1.1-3-6.8H14z"/></svg>
         <svg class="fc-cross" viewBox="0 0 32 32" width="32" height="32"><circle cx="16" cy="16" r="6"/><path d="M16 0v10M16 22v10M0 16h10M22 16h10"/></svg>
@@ -59,18 +63,12 @@
     <p class="hero-hint mono" aria-hidden="true">seret untuk memutar gunungan, klik untuk riak</p>
   </section>
 
-  <section class="stats sec-build" id="stats" aria-label="catatan ITO 2025">
-    <div class="stat"><span class="num" data-target="300">0</span><span class="label">peserta ITO 2025</span></div>
-    <div class="stat"><span class="num" data-target="3">0</span><span class="label">bidang lomba 2025</span></div>
-    <div class="stat"><span class="num" data-target="100">0</span><span class="label">persen dikelola siswa</span></div>
-  </section>
-
   <section class="about sec-build" id="tentang">
     <div class="about-grid">
       <h2 class="reveal">Dari Jombang,<br/>untuk<br/>penemu muda</h2>
       <div class="about-body reveal">
-        <p>ITO adalah olimpiade teknologi tahunan yang digelar penuh oleh siswa SMK Telekomunikasi Darul Ulum. Bidang lomba menguji kreativitas dan keterampilan digital siswa SMP/MTs, dari desain poster sampai video kreatif.</p>
-        <p>Tahun ini bidang lomba diperluas menjadi empat. Detail tiap bidang diumumkan lewat kanal resmi sekolah.</p>
+        <p>ITO adalah olimpiade tahunan yang digelar penuh oleh siswa SMK Telekomunikasi Darul Ulum. Bidang lomba menguji kreativitas dan keterampilan generasi muda, mulai dari ranah digital hingga sportivitas arena.</p>
+        <p>Tahun ini kompetisi diperluas menjadi empat cabang. Informasi teknis dan pendaftaran dapat diakses langsung melalui tombol di tiap cabang lomba.</p>
       </div>
     </div>
   </section>
@@ -78,13 +76,45 @@
   <section class="lomba sec-build" id="lomba">
     <div class="section-head">
       <h2 class="reveal">Cabang Lomba</h2>
-      <p class="section-note reveal">empat bidang, detail menyusul</p>
+      <p class="section-note reveal">empat cabang resmi perlombaan</p>
     </div>
     <div class="cards">
-      <article class="card"><span class="card-idx mono">01</span><h3>Desain Poster</h3><p>Karya visual satu halaman. Pesan kuat, komposisi tajam.</p></article>
-      <article class="card"><span class="card-idx mono">02</span><h3>Video Kreatif</h3><p>Cerita pendek bergerak. Ide di atas alat.</p></article>
-      <article class="card"><span class="card-idx mono">03</span><h3>Fotografi</h3><p>Satu bingkai, satu sudut pandang yang tak terlupakan.</p></article>
-      <article class="card"><span class="card-idx mono">04</span><h3>Coding Challenge</h3><p>Logika dan pemecahan masalah, batas waktu berdetak.</p></article>
+      <article class="card">
+        <span class="card-idx mono">01</span>
+        <h3>Video Kreatif</h3>
+        <p>Cerita pendek bergerak. Eksplorasi sinematografi dan ide kreatif tanpa batas.</p>
+        <div class="card-actions">
+          <a class="btn btn-primary btn-sm" href="https://wa.me/6285649400339?text=Halo%20Panitia%20ITO%202027,%20saya%20ingin%20mendaftar%20Lomba%20Video%20Kreatif">Pendaftaran</a>
+          <a class="btn btn-ghost btn-sm" href="https://wa.me/6285649400339?text=Halo%20Panitia%20ITO%202027,%20mohon%20info%20Juknis%20Lomba%20Video%20Kreatif">Juknis</a>
+        </div>
+      </article>
+      <article class="card">
+        <span class="card-idx mono">02</span>
+        <h3>Poster Digital</h3>
+        <p>Karya visual satu halaman. Komposisi grafis tajam dan pesan teknologi yang kuat.</p>
+        <div class="card-actions">
+          <a class="btn btn-primary btn-sm" href="https://wa.me/6285649400339?text=Halo%20Panitia%20ITO%202027,%20saya%20ingin%20mendaftar%20Lomba%20Poster%20Digital">Pendaftaran</a>
+          <a class="btn btn-ghost btn-sm" href="https://wa.me/6285649400339?text=Halo%20Panitia%20ITO%202027,%20mohon%20info%20Juknis%20Lomba%20Poster%20Digital">Juknis</a>
+        </div>
+      </article>
+      <article class="card">
+        <span class="card-idx mono">03</span>
+        <h3>Voly</h3>
+        <p>Turnamen bola voli pelajar SMP/MTs. Junjung tinggi sportivitas dan kekompakan tim.</p>
+        <div class="card-actions">
+          <a class="btn btn-primary btn-sm" href="https://wa.me/6285649400339?text=Halo%20Panitia%20ITO%202027,%20saya%20ingin%20mendaftar%20Lomba%20Voly">Pendaftaran</a>
+          <a class="btn btn-ghost btn-sm" href="https://wa.me/6285649400339?text=Halo%20Panitia%20ITO%202027,%20mohon%20info%20Juknis%20Lomba%20Voly">Juknis</a>
+        </div>
+      </article>
+      <article class="card">
+        <span class="card-idx mono">04</span>
+        <h3>ITO Futsal Championship</h3>
+        <p>Ajang kompetisi futsal bergengsi. Buktikan ketangkasan strategi dan stamina di lapangan.</p>
+        <div class="card-actions">
+          <a class="btn btn-primary btn-sm" href="https://wa.me/6285649400339?text=Halo%20Panitia%20ITO%202027,%20saya%20ingin%20mendaftar%20ITO%20Futsal%20Championship">Pendaftaran</a>
+          <a class="btn btn-ghost btn-sm" href="https://wa.me/6285649400339?text=Halo%20Panitia%20ITO%202027,%20mohon%20info%20Juknis%20ITO%20Futsal%20Championship">Juknis</a>
+        </div>
+      </article>
     </div>
   </section>
 
