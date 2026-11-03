@@ -152,69 +152,69 @@ if (!reduced) {
   c1.setTool(tl, "pen", 0);
   c2.setTool(tl, "ibeam", 0);
   tl.addLabel("grid", 0)
-    .to(".build-hint", { autoAlpha: 0, duration: .18 }, .05)
-    .to([hud, ".strip", c1.el, c2.el, ".layers"], { autoAlpha: 1, duration: .20 }, 0)
-    .to(ft, { scaleX: 1, duration: .35, ease: "none" }, 0)
-    .to(fr, { scaleY: 1, duration: .35, ease: "none" }, .06)
-    .to(fbb, { scaleX: 1, duration: .35, ease: "none" }, .12)
-    .to(fl, { scaleY: 1, duration: .35, ease: "none" }, .18)
-    .to(gv, { scaleY: 1, duration: .35, stagger: .05, ease: "none" }, .08)
-    .to(gh, { scaleX: 1, duration: .35, stagger: .05, ease: "none" }, .10)
-    .to(H.querySelectorAll(".crop"), { scale: 1, autoAlpha: 1, stagger: .03, duration: .22 }, .05);
+    .to(".build-hint", { autoAlpha: 0, duration: .35 }, .10)
+    .to([hud, ".strip", c1.el, c2.el, ".layers"], { autoAlpha: 1, duration: .40 }, 0)
+    .to(ft, { scaleX: 1, duration: .65, ease: "none" }, 0)
+    .to(fr, { scaleY: 1, duration: .65, ease: "none" }, .10)
+    .to(fbb, { scaleX: 1, duration: .65, ease: "none" }, .20)
+    .to(fl, { scaleY: 1, duration: .65, ease: "none" }, .30)
+    .to(gv, { scaleY: 1, duration: .65, stagger: .08, ease: "none" }, .15)
+    .to(gh, { scaleX: 1, duration: .65, stagger: .08, ease: "none" }, .18)
+    .to(H.querySelectorAll(".crop"), { scale: 1, autoAlpha: 1, stagger: .06, duration: .40 }, .10);
 
   /* Kursor 1 (panitia ITO — Pen -> Arrow): tarik .marq presisi untuk judul */
-  tl.addLabel("judul", .32);
-  c1.setTool(tl, "arrow", .40);
+  tl.addLabel("judul", .65);
+  c1.setTool(tl, "arrow", .80);
   tl.fromTo(c1.el,
     { x: fn((l) => l.W * .04), y: fn((l) => l.H * .16) },
-    { x: fn((l) => l.m.x), y: fn((l) => l.m.y), duration: .22, immediateRender: false }, .18)
+    { x: fn((l) => l.m.x), y: fn((l) => l.m.y), duration: .40, immediateRender: false }, .35)
     .fromTo(c1.el,
       { x: fn((l) => l.m.x), y: fn((l) => l.m.y) },
-      { x: fn((l) => l.m.x + l.m.w), y: fn((l) => l.m.y + l.m.h), duration: .58, immediateRender: false }, .40)
+      { x: fn((l) => l.m.x + l.m.w), y: fn((l) => l.m.y + l.m.h), duration: 1.05, immediateRender: false }, .80)
     .fromTo(marq,
       { x: fn((l) => l.m.x), y: fn((l) => l.m.y), width: 0, height: 0, autoAlpha: 0 },
       {
-        x: fn((l) => l.m.x), y: fn((l) => l.m.y), width: fn((l) => l.m.w), height: fn((l) => l.m.h), autoAlpha: 1, duration: .58, immediateRender: false,
+        x: fn((l) => l.m.x), y: fn((l) => l.m.y), width: fn((l) => l.m.w), height: fn((l) => l.m.h), autoAlpha: 1, duration: 1.05, immediateRender: false,
         onUpdate() { dim.textContent = `${Math.round(this.progress() * L.m.w)} × ${Math.round(this.progress() * L.m.h)}`; }
-      }, .40)
-    .to(lns, { clipPath: "inset(0 0% 0 0)", stagger: .10, duration: .48 }, .42)
-    .to(marq, { autoAlpha: 0, duration: .18 }, 1.05);
-  c1.click(tl, 1.00);
+      }, .80)
+    .to(lns, { clipPath: "inset(0 0% 0 0)", stagger: .18, duration: .85 }, .85)
+    .to(marq, { autoAlpha: 0, duration: .35 }, 1.95);
+  c1.click(tl, 1.85);
 
   /* Kursor 2 (desainer UI — I-Beam -> Move): ketik .terminal, sapu .hero-sub, lalu pasang .cta-row */
-  tl.addLabel("teks", .18);
+  tl.addLabel("teks", 1.4);
   tl.fromTo(c2.el,
     { x: fn((l) => l.term.x), y: fn((l) => l.term.cy) },
-    { x: fn((l) => l.term.x + l.term.w), y: fn((l) => l.term.cy), duration: .18, immediateRender: false }, .12)
-    .to(term, { autoAlpha: 1, scale: 1, duration: .28, ease: "back.out(1.7)" }, .15);
-  c2.click(tl, .30);
+    { x: fn((l) => l.term.x + l.term.w), y: fn((l) => l.term.cy), duration: .35, immediateRender: false }, .25)
+    .to(term, { autoAlpha: 1, scale: 1, duration: .50, ease: "back.out(1.7)" }, .30);
+  c2.click(tl, .60);
 
   tl.fromTo(c2.el,
     { x: fn((l) => l.term.x + l.term.w), y: fn((l) => l.term.cy) },
-    { x: fn((l) => l.sub.x), y: fn((l) => l.sub.cy), duration: .12, immediateRender: false }, .35)
+    { x: fn((l) => l.sub.x), y: fn((l) => l.sub.cy), duration: .25, immediateRender: false }, .70)
     .fromTo(c2.el,
       { x: fn((l) => l.sub.x), y: fn((l) => l.sub.cy) },
-      { x: fn((l) => Math.min(l.W * .93, l.sub.x + l.sub.w)), y: fn((l) => l.sub.y + l.sub.h), duration: .42, ease: "none", immediateRender: false }, .45)
-    .to(sub, { clipPath: "inset(0 0% 0 0)", duration: .42, ease: "none" }, .45);
+      { x: fn((l) => Math.min(l.W * .93, l.sub.x + l.sub.w)), y: fn((l) => l.sub.y + l.sub.h), duration: .75, ease: "none", immediateRender: false }, .90)
+    .to(sub, { clipPath: "inset(0 0% 0 0)", duration: .75, ease: "none" }, .90);
 
-  tl.addLabel("aset", .90);
-  c2.setTool(tl, "move", 1.00);
-  tl.to(tray, { autoAlpha: 1, duration: .15 }, .85)
+  tl.addLabel("aset", 2.1);
+  c2.setTool(tl, "move", 2.2);
+  tl.to(tray, { autoAlpha: 1, duration: .30 }, 1.80)
     .fromTo(c2.el,
       { x: fn((l) => Math.min(l.W * .93, l.sub.x + l.sub.w)), y: fn((l) => l.sub.y + l.sub.h) },
-      { x: fn((l) => l.c.x + l.c.w), y: fn((l) => l.c.cy), duration: .32, immediateRender: false }, 1.00)
-    .to(cta, { autoAlpha: 1, scale: 1, x: 0, y: 0, duration: .42 }, .95)
-    .to([gx, gy], { autoAlpha: 1, duration: .15 }, 1.30)
-    .to([gx, gy, tray], { autoAlpha: 0, duration: .18 }, 1.50);
-  c2.click(tl, 1.32);
+      { x: fn((l) => l.c.x + l.c.w), y: fn((l) => l.c.cy), duration: .60, immediateRender: false }, 2.15)
+    .to(cta, { autoAlpha: 1, scale: 1, x: 0, y: 0, duration: .75 }, 2.05)
+    .to([gx, gy], { autoAlpha: 1, duration: .30 }, 2.65)
+    .to([gx, gy, tray], { autoAlpha: 0, duration: .35 }, 3.00);
+  c2.click(tl, 2.75);
 
-  tl.addLabel("gunungan", .95)
-    .to(drop, { v: 1, duration: .70, ease: "back.out(1.4)" }, .95)
-    .to([".hero-meta", ".hero-hint"].map((s) => $(s)), { autoAlpha: 1, stagger: .08, duration: .30 }, 1.35);
+  tl.addLabel("gunungan", 2.3);
+  tl.to(drop, { v: 1, duration: 1.25, ease: "back.out(1.4)" }, 2.2)
+    .to([".hero-meta", ".hero-hint"].map((s) => $(s)), { autoAlpha: 1, stagger: .15, duration: .55 }, 2.9);
 
   /* selesai: kedua kursor & chrome editor memudar bersih */
-  tl.addLabel("selesai", 1.78)
-    .to([c1.el, c2.el, ...[".crop", ".layers", ".strip", ".hud", ".frame"].map((s) => H.querySelectorAll(s))], { autoAlpha: 0, duration: .35 }, 1.78)
+  tl.addLabel("selesai", 3.4)
+    .to([c1.el, c2.el, ...[".crop", ".layers", ".strip", ".hud", ".frame"].map((s) => H.querySelectorAll(s))], { autoAlpha: 0, duration: .60 }, 3.4)
     .addLabel("end");
 
   const names = ["grid", "judul", "teks", "aset", "gunungan", "selesai"];
